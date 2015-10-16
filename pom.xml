@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.sap.vcm</groupId>
+	<artifactId>LVMAdaptersParent</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0</version>
+	<name>LVM Openstack Adapter Parent Project</name>
+
+ <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+	<modules>
+		<module>VirtualizationAPIs</module>
+		<module>StorageManagerOpenstack</module>
+		<module>VirtualizationManagerOpenstack</module>
+		<module>LVMAdaptersApp</module>
+	</modules>
+
+	<build>
+		<pluginManagement>
+
+			<plugins>
+				<plugin>
+					<version>2.4</version>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.5</source>
+						<target>1.5</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+
+	<dependencies>
+
+		<dependency>
+			<groupId>com.sap.vcm</groupId>
+			<artifactId>StorageManagerOpenstack</artifactId>
+			<version>1.0.0</version>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.vcm</groupId>
+			<artifactId>VirtualizationManagerOpenstack</artifactId>
+			<version>1.0.0</version>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.vcm</groupId>
+			<artifactId>LVMAdaptersApp</artifactId>
+			<version>1.0.0</version>
+			<type>ear</type>
+		</dependency>
+
+	</dependencies>
+ 
+
+</project>

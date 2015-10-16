@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Implementation-Title: VirtualizationManagerOpenstackApp
+Implementation-Version: 2015.10.07.10.47.41
+Implementation-Vendor-Id: sap.com
+Specification-Vendor: SAP AG
+
