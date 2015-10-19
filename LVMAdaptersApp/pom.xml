@@ -91,6 +91,27 @@
 					</modules>
 				</configuration>
 			</plugin>
+				<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.3.1</version>
+				<executions>
+					<execution>
+						<id>Install-LVMApp-ear</id>
+						<phase>package</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>LVMAdaptersApp</artifactId>
+							<version>${project.version}</version>
+							<packaging>ear</packaging>
+							<file>target/LVMAdaptersApp-1.0.ear</file>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>

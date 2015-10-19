@@ -7,10 +7,10 @@
 	<packaging>war</packaging>
 	<name>StorageManagerOpenstack</name>
 
- <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<description>Storage Manager Openstack source</description>
 	<dependencies>
 
@@ -19,10 +19,11 @@
 			<groupId>com.sap.vcm</groupId>
 			<artifactId>sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI</artifactId>
 			<version>1.0.0</version>
-	<!--  	uncomment to use file system instead of local repository
-			<scope>system</scope>
-			<systemPath>${project.basedir}/WebContent/WEB-INF/lib/sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI-1.0.0.jar</systemPath>
--->
+			<!--
+				uncomment to use file system instead of local repository
+				<scope>system</scope>
+				<systemPath>${project.basedir}/WebContent/WEB-INF/lib/sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI-1.0.0.jar</systemPath>
+			-->
 		</dependency>
 
 
@@ -30,20 +31,22 @@
 			<groupId>com.sap.vcm</groupId>
 			<artifactId>sap.com.tc.vcm.storage.adapter.app.StorageAPI</artifactId>
 			<version>1.0.0</version>
-		<!--  	uncomment to use file system instead of local repository
-			<scope>system</scope>
-			<systemPath>${project.basedir}/WebContent/WEB-INF/lib/sap.com.tc.vcm.storage.adapter.app.StorageAPI.jar</systemPath>
--->
+			<!--
+				uncomment to use file system instead of local repository
+				<scope>system</scope>
+				<systemPath>${project.basedir}/WebContent/WEB-INF/lib/sap.com.tc.vcm.storage.adapter.app.StorageAPI.jar</systemPath>
+			-->
 		</dependency>
 
 		<dependency>
 			<groupId>com.sap.vcm</groupId>
 			<artifactId>openstack4j-core-2.0.4-SNAPSHOT_with_Manila</artifactId>
 			<version>1.0.0</version>
-	<!--  	uncomment to use file system instead of local repository
-			<scope>system</scope>
-			<systemPath>${project.basedir}/WebContent/WEB-INF/lib/openstack4j-core-2.0.4-SNAPSHOT_with_Manila.jar</systemPath>
--->
+			<!--
+				uncomment to use file system instead of local repository
+				<scope>system</scope>
+				<systemPath>${project.basedir}/WebContent/WEB-INF/lib/openstack4j-core-2.0.4-SNAPSHOT_with_Manila.jar</systemPath>
+			-->
 		</dependency>
 
 		<dependency>
@@ -133,6 +136,28 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.3.1</version>
+				<executions>
+					<execution>
+						<id>Install-StorageManagerOpenstack-war</id>
+						<phase>package</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>StorageManagerOpenstack</artifactId>
+							<version>${project.version}</version>
+							<packaging>war</packaging>
+							<file>target\StorageManagerOpenstack-1.0.0.war</file>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 </project>

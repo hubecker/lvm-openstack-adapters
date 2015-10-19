@@ -3,8 +3,9 @@
 
 
 
+
 <Properties>
-<Property key="j2ee.archive.name" value="VirtualizationManagerOpenstackApp.ear"/>
+<Property key="j2ee.archive.name" value="LVMAdaptersApp.ear"/>
 <Property key="j2ee.archive.location" value="/"/>
 </Properties>
 </TSSAP-INFO>
