@@ -62,6 +62,7 @@ public class OpenStack_CloudController {
 	
 	private Map<String, String> flavorIdMap = new HashMap<String, String>();
 	private Map<String, String> networkIdMap = new HashMap<String, String>();
+	private Map<String, String> securityGroupIdMap= new HashMap<String, String>();
 
 
 
@@ -412,32 +413,22 @@ public class OpenStack_CloudController {
 		OSClient os = getOs();
 
 		
-		String flavorId = flavorIdMap.get(instanceType);
-		String securityGroupName="";
-
-//		if ((securityGroup != null) && (!securityGroup.equals(""))
-//				&& (!securityGroup.equals("default")))
-//
-//		{
-//			// TODO: fix this: should be structure or lookup table; issue could arise if there is a
-//			// "#" in the id.	
-//			securityGroupName=securityGroup.split("\\[")[0];
-//			securityGroup = securityGroup.split("\\[")[1].replace("]","" );
-//			
-//		}
-		
-
+		String flavorId = flavorIdMap.get(instanceType);	
 
 		
 		try {
 
 			// Create a Server Model Object
 			ServerCreate serverCreate = null;
-			ServerCreateBuilder serverCreateBuilder = Builders.server().name(instanceName)
-		//	.addMetadataItem("hostname", hostName)
-		//	.userData(encode64("#cloud-config\nhostname: "+hostName))
+			
+			ServerCreateBuilder serverCreateBuilder = Builders.server()
+			.name(instanceName)
 			.flavor(flavorId).image(imageID);
 
+			if ((securityGroup != null) && (!securityGroup.equals(""))
+					&& (!securityGroup.equals("default")))
+				serverCreateBuilder.addSecurityGroup(securityGroup);
+			
 			for (String networkID : networkIDList) {
 				String subnet = os.networking().network().get(networkID).getSubnets().get(0);
 			//we could add an input field for IP address in the provision input params instead of this
@@ -458,12 +449,13 @@ public class OpenStack_CloudController {
 				}
 			
 			}
-
+//note if we create a port then the security group of the port over rides 
+//the security group of the instance so we need to set it here with securityGroupID
 				if ((staticIP!=null) && (!staticIP.equals(""))){
 					Port  port = null;
 					port = os.networking().port().create(
 							Builders.port().name("port0").networkId(networkID).fixedIp(
-									staticIP, subnet).build());
+									staticIP, subnet).securityGroup(securityGroupIdMap.get(securityGroup)).build());
 					serverCreateBuilder.addNetworkPort(port.getId());
 					
 					
@@ -476,10 +468,6 @@ public class OpenStack_CloudController {
 
 }
 
-			if ((securityGroup != null) && (!securityGroup.equals(""))
-					&& (!securityGroup.equals("default")))
-				serverCreateBuilder.addSecurityGroup(securityGroup);
-			//	serverCreateBuilder.addSecurityGroup(securityGroupName);
 			
 			if ((availabilityZone != null) && (!availabilityZone.equals(""))
 					&& (!availabilityZone.equals("default")))
@@ -494,7 +482,7 @@ public class OpenStack_CloudController {
 			//TODO: Track down why we (sometimes) need a delay here.
 			//The process completes properly with or without this delay but monitoring returns "Failed" if we do not add this 1 sec sleep
 			//Maybe bug on Openstack side? i.e. returns a server which is not ready to be asked for status
-			Thread.sleep(1000);
+			Thread.sleep(3000);
 			return server.getId();
 		} catch (Exception e) {
 			throw new CloudClientException(e);
@@ -659,7 +647,8 @@ public class OpenStack_CloudController {
 			for (SecGroupExtension securityGroup : securityGroups) {
 				if (securityGroup.getName() != null) {
 					String name = securityGroup.getName();
-
+					String id = securityGroup.getId();
+					securityGroupIdMap.put(name, id);		
 					securityIds.add(name);
 				}
 			}

@@ -3,7 +3,7 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sap.vcm</groupId>
-	<artifactId>sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPIs</artifactId>
+	<artifactId>VirtualizationAPIs</artifactId>
 	<version>1.0.0</version>
 
 	<description>
@@ -11,9 +11,7 @@
   	</description>
 
 	<properties>
-		<groupId>${project.groupId}</groupId>
-		<version>${project.version}</version>
-		<packaging>${project.packaging}</packaging>
+	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 	</properties>
@@ -36,7 +34,7 @@
 							<artifactId>sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI</artifactId>
 							<version>${project.version}</version>
 							<packaging>${project.packaging}</packaging>
-							<file>sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI-1.0.0.jar</file>
+							<file>lib/sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI-1.0.0.jar</file>
 						</configuration>
 					</execution>
 					<execution>
@@ -50,7 +48,7 @@
 							<artifactId>sap.com.tc.vcm.storage.adapter.app.StorageAPI</artifactId>
 							<version>${project.version}</version>
 							<packaging>${project.packaging}</packaging>
-							<file>sap.com.tc.vcm.storage.adapter.app.StorageAPI.jar</file>
+							<file>lib/sap.com.tc.vcm.storage.adapter.app.StorageAPI.jar</file>
 						</configuration>
 					</execution>
 
@@ -65,7 +63,7 @@
 							<artifactId>openstack4j-core-2.0.4-SNAPSHOT_with_Manila</artifactId>
 							<version>${project.version}</version>
 							<packaging>${project.packaging}</packaging>
-							<file>openstack4j-core-2.0.4-SNAPSHOT_with_Manila.jar</file>
+							<file>lib/openstack4j-core-2.0.4-SNAPSHOT_with_Manila.jar</file>
 						</configuration>
 					</execution>
 				</executions>
