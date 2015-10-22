@@ -44,18 +44,31 @@ You should now have an ear file in lvm-openstack-adapters\LVMAdaptersApp\target\
 
 You can deploy this using eclipse: open the deploy view, select External Deployable Archives, find the ear file in the popup, right click and select deploy.
 
-Alternatively you can:
-Copy the Files you need to deploy to the LVM machine and then deploy it via Telnet: 
+The EAR file can de deployed either via the IDE, or using the Telnet commands.
 
-SSH to host and then execute:
-```
-Telnet localhost 50008 
-Administrator
-<password> 
-jump 0
-add deploy
-deploy /<locationOnHost>/<yourFile>
-```
+
+In case you want to deploy it using Telnet, these are the steps you must follow:
+  0. Copy the File you need to deploy to the LVM machine and then deploy it via Telnet: 
+  1.  Open a Telnet connection to the AS Java on which you want to deploy the application. On Windows, you can do this from a DOS prompt with the command:
+telnet localhost <port>,
+where <port> is the Telnet port of your server. For example, if your server installation is c:\usr\sap\<some_three_letter_SID>\JCxx\..., then your Telnet port should be 5xx08.
+  2.  Log on using your AS Java administrator user name and password.
+  3.  When you have logged on, type the following Telnet commands:
+> lsc
+
+This will list the cluster elements. Find "Server 0", look the value in the "ID" column and type your next command:
+
+> jump x
+
+where x is this ID. Then type these commands:
+
+> add deploy
+> deploy <path to the location of the file >\LVMAdaptersApp-1.0.ear
+
+For more information on telnet deploy see: http://help.sap.com/saphelp_banking50/helpdata/en/44/ee4a09d85a627de10000000a155369/content.htm
+
+
+
 Now you should see the Adapters in LVM. Procedure is the same As with any other adapter:
 1.  navigate to Infrastructure->Virtualization Managers 
 2.  select add 
@@ -65,7 +78,7 @@ Now configure the adapter; again this process is similar to configuring other ad
 Fill in the form with Openstack connection details:
 * OpenStack username 
 * OpenStack password
-* URL - e.g. http://<<Openstack hostname>>:5000/v2.0
+* URL - e.g. http://Openstack_hostname:5000/v2.0
 * Region - e.g. RegionOne
 * Tenant - also known as "Project" 
  
