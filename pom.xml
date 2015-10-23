@@ -40,7 +40,7 @@
 							<artifactId>sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI</artifactId>
 							<version>${project.version}</version>
 							<packaging>${project.packaging}</packaging>
-							<file>lib/sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI-1.0.0.jar</file>
+							<file>LVMAdaptersApp/lib/sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI-1.0.0.jar</file>
 						</configuration>
 					</execution>
 					<execution>
@@ -54,7 +54,7 @@
 							<artifactId>sap.com.tc.vcm.storage.adapter.app.StorageAPI</artifactId>
 							<version>${project.version}</version>
 							<packaging>${project.packaging}</packaging>
-							<file>lib/sap.com.tc.vcm.storage.adapter.app.StorageAPI.jar</file>
+							<file>LVMAdaptersApp/lib/sap.com.tc.vcm.storage.adapter.app.StorageAPI.jar</file>
 						</configuration>
 					</execution>
 
@@ -69,7 +69,7 @@
 							<artifactId>openstack4j-core-2.0.4-SNAPSHOT_with_Manila</artifactId>
 							<version>${project.version}</version>
 							<packaging>${project.packaging}</packaging>
-							<file>lib/openstack4j-core-2.0.4-SNAPSHOT_with_Manila.jar</file>
+							<file>LVMAdaptersApp/lib/openstack4j-core-2.0.4-SNAPSHOT_with_Manila.jar</file>
 						</configuration>
 					</execution>
 				</executions>
