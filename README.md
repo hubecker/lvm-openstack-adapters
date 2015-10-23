@@ -69,12 +69,12 @@ For more information on telnet deploy see: http://help.sap.com/saphelp_banking50
 
 
 ###Configure and Use
-Now you should see the Adapters in LVM. The configuration procedure is similar to other adapters:
+Now you should see the OpenStack adapters in LVM. The configuration procedure is similar to other adapters:
   1.  navigate to Infrastructure->Virtualization Managers 
   2.  select add 
   3.  choose Openstack
  
-Now configure the adapter; again this process is similar to configuring other adapters (like AWS):
+
 Fill in the form with Openstack connection details:
 * OpenStack username 
 * OpenStack password
