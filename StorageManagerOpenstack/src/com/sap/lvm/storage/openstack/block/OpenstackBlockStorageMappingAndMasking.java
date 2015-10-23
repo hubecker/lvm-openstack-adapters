@@ -57,7 +57,7 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 			try {
 				volume = openstackClient.getVolume(volumeDetails.storageVolume.storageVolumeId);
 				if (volume == null) {
-					logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), "Volume: " + volumeDetails.storageVolume.storageVolumeId + " does not exist"));
+					logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), "Volume: " + volumeDetails.storageVolume.storageVolumeId + " does not exist"));
 					continue;
 				}
 				//check if volume is in the correct state - attached - if not, fail the operation as state is undefined
@@ -74,7 +74,7 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 						if (!response.isSuccess())
 							throw new CloudClientException(response.toString());
 					} else {
-						logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(),
+						logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(),
 								"Volume: " + volumeDetails.storageVolume.storageVolumeId + " is attached to instance: " + instanceId + " but expected instance is: " + expectedInstanceId)); 
 					}
 				} 
@@ -82,19 +82,19 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 				 if (OpenstackVolumeStates.available.toString().equals(volume.getStatus().toString())) 
 				{	logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "postDetachVolume: Volume: " + volumeDetails.storageVolume.storageVolumeId + " is already in expected state: " + volume.getStatus() + " for the operation", null);
 				
-//					logMessages.add(new StorageLogMessage(Severity.INFO, "SMI-S", System.currentTimeMillis(),
+//					logMessages.add(new StorageLogMessage(Severity.INFO, "OSBlock", System.currentTimeMillis(),
 //							"Volume: " + volumeDetails.storageVolume.storageVolumeId + " is already in expected state: " + volume.getStatus() + " for the operation"));
 				}
 				else
 				
 				{
-					logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(),
+					logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(),
 							"Volunme: " + volumeDetails.storageVolume.storageVolumeId + " is in unexpected state: " + volume.getStatus() + " for the operation"));
 				}
 				//	} catch (CloudClientException e) {
 			} catch (Exception e) {
 				logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "postDetachVolume:" + e.getMessage(), null,e);
-				logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), e.getMessage()));	
+				logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
 			}
 		}
 
@@ -113,7 +113,7 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 					//  } catch (CloudClientException e) {
 				} catch (Exception e) {
 
-					logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), e.getMessage()));	
+					logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
 				}
 			}
 		}

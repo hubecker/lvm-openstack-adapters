@@ -2,7 +2,7 @@
  * ### SAMPLE CODE ###
  * Copyright (c) 2012 SAP AG
  */
-package com.sap.lvm.storage.openstack.block;
+package com.sap.lvm.storage.openstack.init;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -13,6 +13,9 @@ import java.util.Map;
 import com.sap.lvm.storage.openstack.block.OpenstackBlockStorageCloning.OpenstackBlockCloneVolumeStatus;
 import com.sap.lvm.storage.openstack.block.OpenstackBlockStorageCloning.OpenstackBlockCloneVolumesContext;
 import com.sap.lvm.storage.openstack.block.OpenstackBlockStorageSnapshot.OpenstackBlockSnapshotVolumesContext;
+import com.sap.lvm.storage.openstack.file.OpenstackFileStorageCloning.OpenstackFileCloneVolumeStatus;
+import com.sap.lvm.storage.openstack.file.OpenstackFileStorageCloning.OpenstackFileCloneVolumesContext;
+import com.sap.lvm.storage.openstack.file.OpenstackFileStorageSnapshot.OpenstackFileSnapshotVolumesContext;
 import com.sap.nw.lm.aci.engine.base.exception.EngineException;
 import com.sap.tc.vcm.base.util.serialization.factory.ISerializationFactory;
 import com.sap.tc.vcm.base.util.serialization.serializable.SerializableClass;
@@ -26,10 +29,16 @@ public class SerializationFactory implements ISerializationFactory {
 	
 	public SerializationFactory() {
 		super();
-		//OpenStack
+		//OpenStack Block
 		addClass(OpenstackBlockSnapshotVolumesContext.class);
 		addClass(OpenstackBlockCloneVolumesContext.class);
 		addClass(OpenstackBlockCloneVolumeStatus.class);
+
+    //Openstack File    
+ 		addClass(OpenstackFileSnapshotVolumesContext.class);
+		addClass(OpenstackFileCloneVolumesContext.class);
+		addClass(OpenstackFileCloneVolumeStatus.class);
+
 	}
 	
 	protected void addClass(Class<?> clazz) {

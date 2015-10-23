@@ -4,8 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.openstack4j.model.compute.Server;
@@ -14,11 +14,6 @@ import org.openstack4j.model.storage.block.VolumeSnapshot;
 import org.openstack4j.model.storage.file.Share;
 import org.openstack4j.model.storage.file.ShareSnapshot;
 
-import com.sap.nw.lm.aci.engine.api.base.property.IPropertyType.ValueType;
-
-import com.sap.nw.lm.aci.engine.base.api.i18n.TranslatableString;
-//import com.sap.nw.lm.aci.engine.base.api.util.MiscUtil;
-//import com.sap.nw.lm.aci.engine.base.api.util.connectivity.agent.HttpProxyDataImpl;
 import com.sap.tc.vcm.infrastructure.api.adapter.IInfrastructAdapter.ExternalURL;
 import com.sap.tc.vcm.infrastructure.api.adapter.config.ConfigPropMetaData;
 import com.sap.tc.vcm.storage.adapter.api.types.StoragePool;
@@ -82,7 +77,7 @@ public class OpenstackAdapterUtil {
 		String pool = storagePoolId.substring(storagePoolId.indexOf(':')+1);
 
 		StorageVolume internalVolume = new StorageVolume();
-		internalVolume.storageVolumeId = backend+":"+share.getId();
+		internalVolume.storageVolumeId = share.getId();
 		internalVolume.totalSpaceMB = share.getSize()*1024;
 		internalVolume.volumeType = StorageVolume.VolumeType.NAS;
 		internalVolume.name = share.getName(); // +"("+share.getId()+")";
@@ -111,26 +106,26 @@ public class OpenstackAdapterUtil {
 		internalSnapshot.synchronizedFromVolumeId = snap.getVolumeId();
 		return internalSnapshot;
 	}
+ 
+	public static StorageSnapshotVolume shareSnapshotToStorageSnapshot(ShareSnapshot snap, String storageSystemId) {
 
-	public static StorageSnapshotVolume toStorageSnapshot(ShareSnapshot snap, String storageSystemId) {
-
-		String region = storageSystemId.substring(storageSystemId.indexOf(':')+1);
 		StorageSnapshotVolume internalSnapshot = new StorageSnapshotVolume();
-		internalSnapshot.storageVolumeId = region+":"+snap.getId();
+		internalSnapshot.storageVolumeId = snap.getId();
 		internalSnapshot.totalSpaceMB = snap.getSize();
 		internalSnapshot.volumeType = VolumeType.NAS;
 		internalSnapshot.name = snap.getId();
-		internalSnapshot.snapshotName = snap.getDescription();
+		internalSnapshot.snapshotName = snap.getName();
 		internalSnapshot.freeSpaceMB = 0L;
-		internalSnapshot.storagePoolId = region+':'+OpenstackConstants.Openstack_POOL_SNAPSHOTS;
+//		internalSnapshot.storagePoolId = region+':'+OpenstackConstants.Openstack_POOL_SNAPSHOTS;
+		internalSnapshot.storagePoolId = "";
 		internalSnapshot.storageSystemId = storageSystemId;
 		Calendar c = Calendar.getInstance();
-		c.setTime(snap.getCreated());
+		Date created = snap.getCreated();
+		c.setTime(created);
 		internalSnapshot.snapshotTimestamp = c.getTimeInMillis();
 		internalSnapshot.synchronizedFromVolumeId = snap.getShareId();
 		return internalSnapshot;
 	}
-
 	public static List<StorageSnapshotVolume> transformToStorageVolumeMap(List<VolumeSnapshot> snapshotList, String storageSystemId) {
 
 		List<StorageSnapshotVolume> internalSnapshotList = new ArrayList<StorageSnapshotVolume>();
@@ -141,11 +136,11 @@ public class OpenstackAdapterUtil {
 		return internalSnapshotList;
 	}
 
-	public static List<StorageSnapshotVolume> transformSnapshotToStorageVolumeMap(List<ShareSnapshot> snapshotList, String storageSystemId) {
+	public static List<StorageSnapshotVolume> transformShareSnapshotToStorageVolumeMap(List<ShareSnapshot> snapshotList, String storageSystemId) {
 
 		List<StorageSnapshotVolume> internalSnapshotList = new ArrayList<StorageSnapshotVolume>();
 		for (ShareSnapshot snapshot : snapshotList) {
-			internalSnapshotList.add(toStorageSnapshot(snapshot, storageSystemId));
+			internalSnapshotList.add(shareSnapshotToStorageSnapshot(snapshot, storageSystemId));
 
 		}
 		return internalSnapshotList;
@@ -171,10 +166,10 @@ public class OpenstackAdapterUtil {
 		return system;
 	}
 
-	public static StorageSystem createFileStorageSystem(String backend ) {
+	public static StorageSystem createFileStorageSystem(String backend, String accountId ) {
 		StorageSystem system = new StorageSystem();
 		system.name = backend;
-		system.storageSystemId = backend;
+		system.storageSystemId = accountId+':'+backend;
 		system.vendorName = OpenstackConstants.Openstack_VENDOR;
 		system.modelName = OpenstackConstants.Openstack_MANILA;
 		List<ExternalURL> urls = new ArrayList<ExternalURL>();
@@ -215,8 +210,8 @@ public class OpenstackAdapterUtil {
 		String parsedBackend= backend.contains(":") ? backend.split(":")[1] : backend;
 
 		StoragePool volumePool = new StoragePool(parsedBackend+":"+parsedAggr);
-		volumePool.name=aggr;
-		volumePool.storageSystemId =  parsedBackend;
+		volumePool.name=parsedAggr;
+		volumePool.storageSystemId =  accountId+":"+parsedBackend;
 		volumePool.poolType = StoragePoolType.VolumePool;
 		if (totalSpaceGB>0){
 			volumePool.totalSpaceMB=totalSpaceGB*1024;

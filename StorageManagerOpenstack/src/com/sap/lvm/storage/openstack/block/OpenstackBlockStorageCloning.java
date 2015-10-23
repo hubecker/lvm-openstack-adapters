@@ -130,7 +130,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 			    	 
 			     } else {
 			    	 ArrayList<StorageLogMessage> logMessages = cancel(snapshots);
-					 logMessages.add(0, new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), "Snapshot not found: " + inputVolume.sourceVolumeId));
+					 logMessages.add(0, new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), "Snapshot not found: " + inputVolume.sourceVolumeId));
 					 return StorageAdapterImplHelper.createFailedResponse(logMessages, CloneVolumesResponse.class);  
 			     }	
 			  } else {
@@ -149,7 +149,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 			} catch (CloudClientException e) {
 				logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "cloneVolumes:" + e.getMessage(), null,e);
 				ArrayList<StorageLogMessage> logMessages = cancel(snapshots);
-				logMessages.add(0, new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), e.getMessage()));
+				logMessages.add(0, new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));
 				return StorageAdapterImplHelper.createFailedResponse(logMessages, CloneVolumesResponse.class); 
 			}
 		}
@@ -171,7 +171,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    	   openstackClient.deleteSnapshot(snapshot);
 	    	} catch (CloudClientException e) {
 	    	   logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "cancel:" + e.getMessage(), null,e);
-			   logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), e.getMessage()));	
+			   logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
 	    	}
 	    }
 	    return logMessages;
@@ -207,7 +207,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    	  openstackClient.deleteVolume(volume.storageVolumeId);
 	    	} catch (CloudClientException e) {
 	    	   logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "deleteVolumes:" + e.getMessage(), null,e);
-			   logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), e.getMessage()));	
+			   logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
 	    	}
 	    }
 	    if (logMessages.isEmpty()) {
@@ -301,7 +301,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 		//		} catch (CloudClientException e) {
 				} catch (Exception e) {
 		    	  logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "prepareCloneVolumes:" + e.getMessage(), null,e);
-			   	  logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), e.getMessage()));	
+			   	  logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
 		    	}
 			}
 			for (int i = 0; i < volume.sourceMountConfiguration.size();i++) {
@@ -459,7 +459,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    		   openstackClient.deleteSnapshot(status.sourceSnapshotId);
 	    	    } catch (CloudClientException e) {
 	    	       logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "cancelVolumes:" + e.getMessage(), null,e);
-		   	       logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), e.getMessage()));	
+		   	       logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
 	    	    }
 	    	}
 	    	if (status.targetSnapshotId != null){
@@ -468,7 +468,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    	
 	    	    } catch (CloudClientException e) {
 	    	       logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "cancelVolumes:" + e.getMessage(), null,e);
-		   	       logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), e.getMessage()));	
+		   	       logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
 	    	    }
 	    	}
 	    	if (status.targetVolumeId != null){
@@ -477,7 +477,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    		   //  	    } catch (CloudClientException e) {
 	    	    } catch (Exception e) {
 	    	       logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "cancelVolumes:" + e.getMessage(), null,e);
-		   	       logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), e.getMessage()));	
+		   	       logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
 	    	    }
 	    	}
 	    }
@@ -548,7 +548,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 //	    		  }
 	    	   } else if (snapshotState.toString().equals("error")) {
 	    		   logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus: operationId: " + operationId + " failed: " + snapshotId, null);
-		    	   logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), "Failed to Clone volume " + status.volumeToBeCloned.sourceVolumeId +". Snapshot process terminated with ERROR") );	
+		    	   logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), "Failed to Clone volume " + status.volumeToBeCloned.sourceVolumeId +". Snapshot process terminated with ERROR") );	
 	    	       failed = true;
 	    		   break;
 	    	   } else {
@@ -557,7 +557,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    	} catch (Exception e) {
 	    	   failed = true;
 	    	   logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus:" + e.getMessage(), null,e);
-	   	       logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(),  "getOperationStatus:" + e.getMessage()));	
+	   	       logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(),  "getOperationStatus:" + e.getMessage()));	
 	    	}
 	    }
 		//STEP 2: Check Target Snapshot state (for cross-region only) //TODO
@@ -589,7 +589,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 			    		  createTargetVolume(context, status, true);
 			    	   } else if (snapshotState.equals("error")) {
 			    		   logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus: operationId: " + operationId + " failed: " + snapshotId, null);
-				    	   logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), "Failed to Clone volume " + status.volumeToBeCloned.sourceVolumeId +". Snapshot process terminated with ERROR") );	
+				    	   logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), "Failed to Clone volume " + status.volumeToBeCloned.sourceVolumeId +". Snapshot process terminated with ERROR") );	
 			    	       failed = true;
 			    		   break;
 			    	   } else {
@@ -598,7 +598,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 				  } catch (CloudClientException e) {
 				     failed = true;
 				     logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus:" + e.getMessage(), null,e);
-				   	 logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), e.getMessage()));	
+				   	 logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
 				     break;
 				  }
 				  
@@ -614,14 +614,14 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 			    volume = openstackClient.getVolume(status.targetVolumeId);
 			     if (volume == null) {
 	                failed = true;
-				    logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), "Volume " + status.targetVolumeId + " not found"));	
+				    logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), "Volume " + status.targetVolumeId + " not found"));	
 			        break;
 			     }
 		 //    } catch (CloudClientException e) {
 		    } catch (Exception e) {
 		         failed = true;
 		         logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus:" + e.getMessage(), null,e);
-		   	     logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), e.getMessage()));	
+		   	     logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
 		         break;
 		     }
 		     volumeState = volume.getStatus();// VolumeState.fromValue(volume.getStatus());
@@ -632,7 +632,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    	} else if (volumeState.equals(Status.ERROR)) {
 		    	
 		         logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus: operationId: " + operationId + " create volume failed: " + volume.getId(), null);
-		         logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), "Failed to Clone volume " + volume.getId() + ". Process terminated with ERROR") );	
+		         logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), "Failed to Clone volume " + volume.getId() + ". Process terminated with ERROR") );	
 		         failed = true;
 		    	 break;
 		     } else if (volumeState.equals(Status.AVAILABLE)) {
@@ -659,10 +659,10 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 		    	 catch (Exception e) {
 		    			logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus:" + e.getMessage(), null,e);
 		    			//here we just log warning as failing to delete the temporary snapshot does not fail the clone operation 
-		    			logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_WARNING, "SMI-S", System.currentTimeMillis(), "Failed delete temorary snapshot " + volume.getSnapshotId() + ". " + e.getMessage()));	
+		    			logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_WARNING, "OSBlock", System.currentTimeMillis(), "Failed delete temorary snapshot " + volume.getSnapshotId() + ". " + e.getMessage()));	
 		    		}
 		    	} else {
-		    		logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "SMI-S", System.currentTimeMillis(), "Unexpected volume state: " + volumeState.name()) );	
+		    		logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), "Unexpected volume state: " + volumeState.name()) );	
 		    	    failed = true;
 		    		break;
 		    	}}
