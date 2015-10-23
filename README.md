@@ -30,7 +30,7 @@ Steps to build and deploy:
 ```
 ###Build the project
 
-You will need maven installed to package the ear file (tested with Apache Maven 3.0.5):
+You will need maven installed to package the ear file (tested with [Apache Maven 3.0.5](http://archive.apache.org/dist/maven/maven-3/3.0.5/binaries/) (does not work with maven 2.x or 3.3.x):
 
 ```
 cd lvm-openstack-adapters
@@ -68,7 +68,7 @@ where x is this ID. Then type these commands:
 For more information on telnet deploy see: http://help.sap.com/saphelp_banking50/helpdata/en/44/ee4a09d85a627de10000000a155369/content.htm
 
 
-
+###Configure and Use
 Now you should see the Adapters in LVM. Procedure is the same As with any other adapter:
 1.  navigate to Infrastructure->Virtualization Managers 
 2.  select add 
