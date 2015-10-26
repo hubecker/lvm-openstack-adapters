@@ -2,22 +2,50 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sap.vcm</groupId>
-	<artifactId>VirtualizationManagerOpenstack</artifactId>
+	<artifactId>LVMAdapters</artifactId>
 	<version>1.0.0</version>
 	<packaging>war</packaging>
-	<name>VirtualizationManagerOpenstack</name>
+	<name>LVMAdapters</name>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<description>VirtualizationManager Openstack source</description>
+
+	<description>LVM Adapters for Openstack source</description>
 	<dependencies>
+
+
 		<dependency>
 			<groupId>com.sap.vcm</groupId>
 			<artifactId>sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI</artifactId>
 			<version>1.0.0</version>
 			<!--
+				uncomment to use file system instead of local repository
 				<scope>system</scope>
 				<systemPath>${project.basedir}/WebContent/WEB-INF/lib/sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI-1.0.0.jar</systemPath>
+			-->
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.sap.vcm</groupId>
+			<artifactId>sap.com.tc.vcm.storage.adapter.app.StorageAPI</artifactId>
+			<version>1.0.0</version>
+			<!--
+				uncomment to use file system instead of local repository
+				<scope>system</scope>
+				<systemPath>${project.basedir}/WebContent/WEB-INF/lib/sap.com.tc.vcm.storage.adapter.app.StorageAPI.jar</systemPath>
+			-->
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.vcm</groupId>
+			<artifactId>openstack4j-core-2.0.4-SNAPSHOT_with_Manila</artifactId>
+			<version>1.0.0</version>
+			<!--
+				uncomment to use file system instead of local repository
+				<scope>system</scope>
+				<systemPath>${project.basedir}/WebContent/WEB-INF/lib/openstack4j-core-2.0.4-SNAPSHOT_with_Manila.jar</systemPath>
 			-->
 		</dependency>
 
@@ -47,10 +75,38 @@
 
 	</dependencies>
 	<build>
+
+
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 
+			<plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<finalName>LVMAdaptersApp</finalName>
+					<version>1</version>
+					<generatedDescriptorLocation>src/main/application/META-INF</generatedDescriptorLocation>
+					<modules>
+						<webModule>
+							<groupId>com.sap.vcm</groupId>
+							<artifactId>maven-war-plugin</artifactId>
+							<uri>LVMAdaptersApp.ear</uri>
+							<bundleFileName>LVMAdapters-1.0.0.war</bundleFileName>
+							<contextRoot>/LVMAdapters</contextRoot>
+						</webModule>
+					</modules>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.sap.vcm</groupId>
+						<artifactId>LVMAdapters</artifactId>
+						<version>1.0.0</version>
+						<type>war</type>
 
+					</dependency>
+				</dependencies>
+			</plugin>
 
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
@@ -62,14 +118,16 @@
 				<dependencies>
 					<dependency>
 						<groupId>com.sap.vcm</groupId>
-						<artifactId>VirtualizationManagerOpenstack</artifactId>
+						<artifactId>LVMAdapters</artifactId>
 						<version>1.0.0</version>
 						<type>war</type>
+
 					</dependency>
+
+
 				</dependencies>
 
 			</plugin>
-
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
@@ -84,17 +142,17 @@
 				<version>2.3.1</version>
 				<executions>
 					<execution>
-						<id>Install-VirtualizationManagerOpenstack-war</id>
+						<id>Install-LVMAdaptersOpenstack-war</id>
 						<phase>package</phase>
 						<goals>
 							<goal>install-file</goal>
 						</goals>
 						<configuration>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>VirtualizationManagerOpenstack</artifactId>
+							<artifactId>LVMAdapters</artifactId>
 							<version>${project.version}</version>
 							<packaging>war</packaging>
-							<file>target\VirtualizationManagerOpenstack-1.0.0.war</file>
+							<file>target\LVMAdapters-1.0.0.war</file>
 						</configuration>
 					</execution>
 				</executions>

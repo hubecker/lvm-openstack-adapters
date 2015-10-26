@@ -27,7 +27,7 @@ public class VirtualizationManagerInitializer extends HttpServlet {
 
 	private static final OpenStackVirtualizationManagerAdapterFactory FACTORY = new OpenStackVirtualizationManagerAdapterFactory();
 
-	private SerializationFactory serializationFactory;
+	private VirtualizationSerializationFactory virtualizationSerializationFactory;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -45,8 +45,8 @@ public class VirtualizationManagerInitializer extends HttpServlet {
 		try {
 			IVirtManagerAdapterFactoryRegistry factoryRegistry = getVirtFactoryRegistry();
 			factoryRegistry.registerAdapterFactory(FACTORY);
-			serializationFactory=new SerializationFactory();
-			factoryRegistry.registerSerializationFactory(new SerializationFactory());
+			virtualizationSerializationFactory=new VirtualizationSerializationFactory();
+			factoryRegistry.registerSerializationFactory(new VirtualizationSerializationFactory());
 		} catch (NamingException e) {
 			throw new ServletException("NamingException: " + e.getMessage(), e);
 		}
@@ -60,7 +60,7 @@ public class VirtualizationManagerInitializer extends HttpServlet {
 		try {
 			IVirtManagerAdapterFactoryRegistry factoryRegistry = getVirtFactoryRegistry();
 			factoryRegistry.deregisterAdapterFactory(FACTORY.getFactoryId());
-			factoryRegistry.deregisterSerializationFactory(serializationFactory);
+			factoryRegistry.deregisterSerializationFactory(virtualizationSerializationFactory);
 		} catch (NamingException e) {
 		//TODO: add logging here
 		}

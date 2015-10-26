@@ -18,11 +18,11 @@ import com.sap.tc.vcm.base.util.serialization.serializable.SerializableField;
 
 
 @SuppressWarnings("nls")
-public class SerializationFactory implements ISerializationFactory {
+public class VirtualizationSerializationFactory implements ISerializationFactory {
 	
 	protected Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
 	
-	public SerializationFactory() {
+	public VirtualizationSerializationFactory() {
 		super();
 		/*
 		 *  SAP OpenStack

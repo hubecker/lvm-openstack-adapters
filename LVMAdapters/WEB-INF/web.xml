@@ -14,9 +14,22 @@
     <display-name>StorageManagerInitializer</display-name>
     <servlet-name>StorageManagerInitializer</servlet-name>
     <servlet-class>com.sap.lvm.storage.openstack.init.StorageManagerInitializer</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>StorageManagerInitializer</servlet-name>
     <url-pattern>/StorageManagerInitializer</url-pattern>
+  </servlet-mapping>
+  
+    <servlet>
+    <description></description>
+    <display-name>VirtManagerInitializer</display-name>
+    <servlet-name>VirtManagerInitializer</servlet-name>
+    <servlet-class>com.sap.lvm.virtual.openstack.init.VirtualizationManagerInitializer</servlet-class>
+        <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>VirtManagerInitializer</servlet-name>
+    <url-pattern>/VirtManagerInitializer</url-pattern>
   </servlet-mapping>
 </web-app>

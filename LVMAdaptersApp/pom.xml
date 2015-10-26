@@ -14,16 +14,11 @@
 	<dependencies>
 		<!-- web modules -->
 
-		<dependency>
-			<groupId>com.sap.vcm</groupId>
-			<artifactId>VirtualizationManagerOpenstack</artifactId>
-			<version>1.0.0</version>
-			<type>war</type>
-		</dependency>
+		
 
 		<dependency>
 			<groupId>com.sap.vcm</groupId>
-			<artifactId>StorageManagerOpenstack</artifactId>
+			<artifactId>LVMAdapters</artifactId>
 			<version>1.0.0</version>
 			<type>war</type>
 		</dependency>
@@ -67,7 +62,7 @@
 					<modules>
 						<webModule>
 							<groupId>com.sap.vcm</groupId>
-							<artifactId>VirtualizationManagerOpenstack</artifactId>
+							<artifactId>LVMAdapters</artifactId>
 						</webModule>
 
 
@@ -75,21 +70,7 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-ear-plugin</artifactId>
-				<version>2.3.1</version>
-				<!-- configuring the ear plugin -->
-				<configuration>
-					<modules>
-						<webModule>
-							<groupId>com.sap.vcm</groupId>
-							<artifactId>StorageManagerOpenstack</artifactId>
-						</webModule>
-
-					</modules>
-				</configuration>
-			</plugin>
+		
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
