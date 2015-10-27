@@ -23,7 +23,7 @@ public class OpenstackConstants {
 	public static final long POLL_OPERATION_SLEEP = 5000;
 
 	public static final String Openstack_VENDOR = "Openstack";
-	public static final String Openstack_VERSION = "0.999";
+	public static final String Openstack_VERSION = "1.0";
 	public static final String Openstack_FACTORY_ID = OpenstackConstants.Openstack_VENDOR + " " + OpenstackConstants.Openstack_VERSION;
 	public static final String Openstack_VIRTUALIZATION_ADAPTER = "Openstack";
 	public static final String Openstack_CLOUD = "Openstack Cloud";

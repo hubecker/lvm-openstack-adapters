@@ -34,11 +34,7 @@ import org.openstack4j.model.network.Port;
 import org.openstack4j.model.network.Subnet;
 import org.openstack4j.openstack.OSFactory;
 
-import com.sap.lvm.virtual.util.MiscUtil;
-
-
-
-
+import com.sap.lvm.util.MiscUtil;
 
 
 /**

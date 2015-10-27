@@ -19,9 +19,6 @@ import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.Server.Status;
 import org.openstack4j.model.image.Image;
 
-import com.sap.lvm.virtual.util.Severity;
-
-
 import com.sap.tc.vcm.infrastructure.api.adapter.request.IJavaEeLog;
 import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpSyncResponse;
 import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpResponse.VirtLogMessage;
@@ -267,7 +264,7 @@ public class OpenStackVirtMonitoringService implements IVirtMonitoringService {
 								hostname = addr.getHostName();
 							} catch (UnknownHostException e) {
 						
-								j2eeLog.log(Severity.WARNING,
+								j2eeLog.log(IJavaEeLog.SEVERITY_WARNING,
 										"Could not get hostname for "+firstIP,"Openstack retrieveCompleteVirtLandscape()",
 									 null);
 								
@@ -301,7 +298,7 @@ public class OpenStackVirtMonitoringService implements IVirtMonitoringService {
 			
 			return responce;
 		} catch (CloudClientException e) {
-		j2eeLog.log(Severity.ERROR, "retrieveCompleteVirtLandscape",
+		j2eeLog.log(IJavaEeLog.SEVERITY_ERROR, "retrieveCompleteVirtLandscape",
 					"OPENSTACK ERROR:" + e,null);
 			 return OpenStackUtil.createFailedSynchResponseWithException(RetrieveCompleteVirtLandscapeResponse.class, e);
 			

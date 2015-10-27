@@ -197,7 +197,7 @@ public class OpenStackVirtOperationService implements IVirtOperationService, IVi
 
 				} else if (entityType.equals(LegacyVirtEntityType.VIRTUAL_HOST.name())) {
 					VirtProvisionResult result = new VirtProvisionResult();
-					Server srv = osClient.describeInstance(entityId);
+				//	Server srv = osClient.describeInstance(entityId);
 					String imageID = osClient.backupInstance(entityId);
 					result.newEntityId = new TypedEntityId(LegacyVirtEntityType.VIRTUAL_HOST_TEMPLATE, imageID); 
 					response.operationResult = result;
@@ -280,7 +280,7 @@ public class OpenStackVirtOperationService implements IVirtOperationService, IVi
 		
 		
 		
-		IVirtOperationSpecificInput opSpecificInput = request.operationSpecificInput;
+		//IVirtOperationSpecificInput opSpecificInput = request.operationSpecificInput;
 
 		if (operation.equals(VirtDefaultOperation.PROVISION.name())) {
 

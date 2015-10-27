@@ -22,8 +22,9 @@ import org.openstack4j.model.storage.file.ShareSnapshot;
 import org.openstack4j.model.storage.file.Share.Status;
 import org.openstack4j.openstack.OSFactory;
 
+import com.sap.lvm.util.MiscUtil;
 import com.sap.lvm.storage.openstack.util.CloudClientException;
-import com.sap.lvm.storage.openstack.util.MiscUtil;
+
 
 public class OpenstackFileCloudStorageController {
 
