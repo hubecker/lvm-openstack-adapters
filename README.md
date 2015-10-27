@@ -1,7 +1,3 @@
-
-# lvm-openstack-adapters
-Virtualization and storage adapters that enable users to manage their OpenStack clouds via LVM (Landscape &amp; Virtualization Management), including all LVM functions e.g. copy, clone, relocate, refresh, etc. While these adapters, provided by SAP, are tested with several configurations, everyone can customize them to work with their own environments.
-
 ## How is it done?
 
 This OpenStack virtualization adapter and storage adapter that connects LVM to OpenStack works similarly to other LVM adapters, the main difference being that this one is open source with Apache License Version 2.0. We use Apache Maven (https://maven.apache.org/) to build the war files and package them into the deployable ear file. We used the OpenStack4j (http://openstack4j.com/) library to interact with the OpenStack server web services. These dependencies will be automatically downloaded from maven repository during the build process.  
@@ -10,9 +6,7 @@ This OpenStack virtualization adapter and storage adapter that connects LVM to O
 ##Building, installing and using the adapters
 
 
-The two Openstack adapter projects, StorageManager  and Virtualization Manager compile to war files and are packaged into a single deployable ear file.
-
-
+The OpenStack adapters, StorageManager  and Virtualization Manager, compile to a war file and are packaged into a single deployable ear file.
 
 
 Here are the instructions for downloading, compiling and deploying the LVM Openstack Virtualization and Storage adapters. 
@@ -90,10 +84,8 @@ You should now see a list of Openstack VMs under Operations -> Virtualization an
 ##Code structure in github repository
 
 The top level contains the following directories:
-StorageManagerOpenstack         :  contains java sources for the Openstack storage manager adapter and a pom.xml to build the war file
-VirtualizationManagerOpenstack: contains java sources for the Openstack virtualization manager adapter and a pom.xml to build the war file
-VirtualizationAPIs: contains 3 API jar files required by adapters above
-LVMAdaptersApp: App project, contains a pom.xml that builds the deployable ear file containing the above war files and some SAP specific files                  
+LVMAdapters:  contains java sources for the Openstack storage manager virtualization manager adapters and a pom.xml to build the war file
+LVMAdaptersApp: App project, contains a pom.xml that builds the deployable ear file containing the above war file and some SAP specific files                  
 
 
 Note: To make modifications to the code in eclipse, first generate the eclipse files:

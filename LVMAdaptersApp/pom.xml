@@ -13,9 +13,6 @@
 
 	<dependencies>
 		<!-- web modules -->
-
-		
-
 		<dependency>
 			<groupId>com.sap.vcm</groupId>
 			<artifactId>LVMAdapters</artifactId>
@@ -69,8 +66,7 @@
 					</modules>
 				</configuration>
 			</plugin>
-
-		
+	
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>

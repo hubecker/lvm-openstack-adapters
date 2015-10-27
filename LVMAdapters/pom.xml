@@ -19,11 +19,6 @@
 			<groupId>com.sap.vcm</groupId>
 			<artifactId>sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI</artifactId>
 			<version>1.0.0</version>
-			<!--
-				uncomment to use file system instead of local repository
-				<scope>system</scope>
-				<systemPath>${project.basedir}/WebContent/WEB-INF/lib/sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI-1.0.0.jar</systemPath>
-			-->
 		</dependency>
 
 
@@ -31,22 +26,12 @@
 			<groupId>com.sap.vcm</groupId>
 			<artifactId>sap.com.tc.vcm.storage.adapter.app.StorageAPI</artifactId>
 			<version>1.0.0</version>
-			<!--
-				uncomment to use file system instead of local repository
-				<scope>system</scope>
-				<systemPath>${project.basedir}/WebContent/WEB-INF/lib/sap.com.tc.vcm.storage.adapter.app.StorageAPI.jar</systemPath>
-			-->
 		</dependency>
 
 		<dependency>
 			<groupId>com.sap.vcm</groupId>
 			<artifactId>openstack4j-core-2.0.4-SNAPSHOT_with_Manila</artifactId>
 			<version>1.0.0</version>
-			<!--
-				uncomment to use file system instead of local repository
-				<scope>system</scope>
-				<systemPath>${project.basedir}/WebContent/WEB-INF/lib/openstack4j-core-2.0.4-SNAPSHOT_with_Manila.jar</systemPath>
-			-->
 		</dependency>
 
 		<dependency>
