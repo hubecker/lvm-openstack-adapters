@@ -207,7 +207,7 @@ public class OpenStack_CloudController {
  * Starts instance specified by instanceID
  * 
  * @param instanceID
- * @return
+ * @return action response
  * @throws CloudClientException
  */
 	public  String activateInstance(String instanceID) throws CloudClientException
@@ -233,7 +233,7 @@ public class OpenStack_CloudController {
 	 * Stops instance specified by instanceID (i.e. transitions to state "SHUTOFF"
 	 * 
 	 * @param instanceID
-	 * @return
+	 * @return action response
 	 * @throws CloudClientException
 	 */
 	public  String deactivateInstance(String instanceID)
@@ -358,7 +358,7 @@ public class OpenStack_CloudController {
 /**
  * Equivalent to getInstance()
  * @param instanceID
- * @return 
+ * @return Openstack server object
  * @throws CloudClientException
  */
 	public synchronized Server describeInstance(String instanceID)
@@ -398,7 +398,7 @@ public class OpenStack_CloudController {
 	 * @param networkIDList
 	 * @param securityGroup
 	 * @param instanceName
-	 * @return
+	 * @return new instanceID
 	 * @throws CloudClientException
 	 */
 	public synchronized String createInstance(String imageID, String staticIP,
@@ -494,7 +494,7 @@ public class OpenStack_CloudController {
 //	}
 	/**
 	 * May or may not be used during provisioning of VMs depending on Openstack setup
-	 * @return
+	 * @return list of subnet Ids
 	 * @throws CloudClientException
 	 */
 	public synchronized List<String> getSubnetIDs() throws CloudClientException {
@@ -588,7 +588,7 @@ public class OpenStack_CloudController {
 	}
 /**
  * Get list of possible "T-shirt" sizes (CPU/disk/RAM) for new VMs during provisioning
- * @return
+ * @return list of flavors a.k.a. t-shirt sizes
  * @throws CloudClientException
  */
 	public synchronized List<? extends Flavor> getFlavors()
@@ -805,7 +805,6 @@ public class OpenStack_CloudController {
 	}
 	
 	/**
-	 * @param region
 	 * @return list of availability zones 
 	 */
 	public List<String> listAvailabilityZones() {

@@ -444,7 +444,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	/**
 	 * @param operationId
 	 * @param context
-	 * @return
+	 * @return StorageOperationResponse
 	 * @throws InfrastructAdapterException
 	 */
 	public StorageOperationResponse<PostProcessCloneVolumesResponse> cancelVolumes(
@@ -495,7 +495,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	/**
 	 * @param operationId
 	 * @param context
-	 * @return
+	 * @return StorageOperationResponse
 	 * @throws InfrastructAdapterException
 	 */
 	public  StorageOperationResponse<PostProcessCloneVolumesResponse> getOperationStatus(

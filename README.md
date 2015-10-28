@@ -94,3 +94,9 @@ mvn  eclipse:eclipse
 ```
 
 Then import the external projects under File->Import Existing projects into workspace and then navigate to the lvm-openstack-adapters directory
+
+##Other maven commands
+You can use maven to generate the javadocs by excuting: 
+* mvn javadoc:javadoc 
+
+Then use your browser to open: lvm-openstack-adapters/LVMAdapters/target/site/apidocs/index.html
