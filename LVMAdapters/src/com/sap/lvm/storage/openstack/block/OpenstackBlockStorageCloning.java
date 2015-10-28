@@ -295,10 +295,10 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 			
 			if (volume.targetStoragePoolId == null) {
 				try {
-					//TODO fix this! 
-				  String zone =openstackClient.listAvailabilityZones(volume.sourceVolumeId).get(0);//getVolume(volume.sourceVolumeId).getAvailabilityZone();
+					
+				  String zone =openstackClient.listAvailabilityZones(volume.sourceVolumeId).get(0);
 				  volume.targetStoragePoolId = volume.sourceVolumeId.substring(0,volume.sourceVolumeId.indexOf(':')) + ":" + zone;
-		//		} catch (CloudClientException e) {
+	
 				} catch (Exception e) {
 		    	  logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "prepareCloneVolumes:" + e.getMessage(), null,e);
 			   	  logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
@@ -347,17 +347,16 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 		    		String region =  openstackClient.getOpenstackId(request.targetStorageSystemId);
 		    		try {
 					      InetAddress address = InetAddress.getByName(hostname); 
-					      //more reliable match in openstack, would not work always - for example if proxy is used
+					     
 					      instance = openstackClient.findInstanceByInternalIP(region, address.getHostAddress());
 					   } catch (UnknownHostException uhe) {
 						   logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "retrieveAvailableStoragePools:" + uhe.getMessage(), null,uhe);
-						  //less reliable it is common to rename the Openstack ip-xx-xx-xx-xx hostnames
-					     // instance = openstackClient.findInstanceByInternalDNSname(region,hostname);
+						
 						   throw uhe;
 					   }
-		    	//	instance = openstackClient.findInstanceByInternalDNSname(region,hostname);
+		    	
 		    		if (instance == null) continue; else break;
-		//    	} catch (CloudClientException e) {
+	
 		    	} catch (Exception e) {
 		    		logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "retrieveAvailableTargetPools: " + e.getMessage(), null, e);
 		    		continue;
@@ -420,7 +419,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	public StorageOperationResponse<RetrieveAvailableTargetVolumesResponse> retrieveAvailableTargetVolumes(
 			RetrieveAvailableTargetVolumesRequest request) {
 		
-		//we don't support this feature for EBS volumes 
+		//we don't support this feature for Block volumes 
 		//but just in case the method ever gets called - return an empty list.
 		logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "retrieveAvailableTargetVolumes: request:" +request, null);
 	    RetrieveAvailableTargetVolumesResponse payload = new RetrieveAvailableTargetVolumesResponse();
@@ -435,7 +434,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	public CloningValidationResponse validateCloneRequest(
 			PrepareCloneVolumesRequest request) {
 		logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "validateCloneRequest: " + request, null);	
-		// Would be nice to check here if we are  not exceeding the EBS quota 
+		// Would be nice to check here if we are  not exceeding the Storage quota 
 	
 		return new CloningValidationResponse();
 		
@@ -474,7 +473,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    	if (status.targetVolumeId != null){
 	    	    try {
 	    		   openstackClient.deleteVolume(status.targetVolumeId);
-	    		   //  	    } catch (CloudClientException e) {
+	    		
 	    	    } catch (Exception e) {
 	    	       logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "cancelVolumes:" + e.getMessage(), null,e);
 		   	       logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
@@ -526,7 +525,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    	   String snapshotStateString=snapshotState.toString();
 	    	   if (snapshotStateString.equals("pending")|| (snapshotStateString.equals("creating"))) {
   		    	 
-  		    	   //   logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus: operationId: " + operationId + "checking snapshot:" + snapshotId + " progress:" + snapshot.getProgress(), null);
+  		    
 	    		   String percent = "0";//snapshot.getProgress(); //progress not tracked in Openstack
 //	    		   if (percent.isEmpty()) {
 //	    			   percent = "0";
@@ -541,6 +540,8 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    	   } else if  (snapshotState.name().equals("AVAILABLE")) { 
 	    		  status.sourceSnapshotComplete = true;
 	    		  logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus: operationId: " + operationId + " completed source snapshot: " + snapshotId, null);
+
+//Clone of remote volumes not currently implemented	    		  
 //	    		  if (isRemoteClone(status.volumeToBeCloned)) {
 //	    			  createTargetSnapshot(snapshotId, status, operationId.toString());
 //	    		   } else {
@@ -560,7 +561,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	   	       logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(),  "getOperationStatus:" + e.getMessage()));	
 	    	}
 	    }
-		//STEP 2: Check Target Snapshot state (for cross-region only) //TODO
+		//STEP 2: Check Target Snapshot state (for cross-region only) 
 		for (OpenstackBlockCloneVolumeStatus status:context.volumeStatus) {
 		  if (isRemoteClone(status.volumeToBeCloned)) {
 			  if (status.targetSnapshotId != null && !status.targetSnapshotComplete) {
@@ -571,7 +572,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 		    	    logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus: operationId: " + operationId + " checking snapshot: " + snapshotId + " state: " + snapshotState, null);
 		    	    if (snapshotState.toString().equals("pending")|| (snapshotState.toString().equals("creating"))) {
 			    		  // logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus: operationId: " + operationId + "checking snapshot:" + snapshotId + " progress:" + snapshot.getProgress(), null);
-			    		   //TODO: openstack doesnt have percent complete I think so map percentages based on state 0, 50,100
+			    		   //TODO: openstack doesn't have percent complete so map percentages based on state 0, 50,100
 			    		   String percent = "0";//snapshot.getStatus()
 			    		   if (percent.isEmpty()) {
 			    			   percent = "0";
@@ -617,14 +618,14 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 				    logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), "Volume " + status.targetVolumeId + " not found"));	
 			        break;
 			     }
-		 //    } catch (CloudClientException e) {
+	
 		    } catch (Exception e) {
 		         failed = true;
 		         logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus:" + e.getMessage(), null,e);
 		   	     logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
 		         break;
 		     }
-		     volumeState = volume.getStatus();// VolumeState.fromValue(volume.getStatus());
+		     volumeState = volume.getStatus();
 	   	    logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus: operationId: " + operationId + " checking volume: " + volume.getId() + " state: " + volumeState, null);
 	         if ((volumeState.equals(Status.CREATING))||(volumeState.equals(Status.ATTACHING))){
 	    		pending = true;
@@ -648,6 +649,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 		    	 }
 		    	 try{
 		    		snapshot = (VolumeSnapshot) openstackClient.getSnapshot(snapshotId);
+		    		//set to true to delete snapshots when no longer needed 
 			    	boolean forDelete = false;
 			    
 			    		  if (forDelete) {
@@ -655,7 +657,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 			    		  }
 		    		  }
 		    		
-		//     catch (CloudClientException e) {
+	
 		    	 catch (Exception e) {
 		    			logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus:" + e.getMessage(), null,e);
 		    			//here we just log warning as failing to delete the temporary snapshot does not fail the clone operation 
@@ -711,25 +713,6 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	
 	
 	
-	private String getTargetExportPath(VolumeToBeCloned volumeToBeCloned, String volumeId) {
-	    StringTokenizer tokenizer = new StringTokenizer(volumeToBeCloned.sourceMountConfiguration.get(0).exportPath,":");
-	    StringBuilder builder = new StringBuilder(tokenizer.nextToken());
-	    tokenizer.nextToken();
-	    return builder.append(":").append(volumeId).append(":").append(tokenizer.nextToken()).toString();
-	    
-	}
-
-	private StorageOperationStatus checkVolumesStatus(OpenstackBlockCloneVolumesContext context, List<StorageLogMessage> logMessages) {
-		return null;
-	}
-	
-	private StorageOperationStatus checkSnapshotsStatus(OpenstackBlockCloneVolumesContext context, List<StorageLogMessage> logMessages) {
-	  return null;	
-	}
-	
-	private StorageOperationStatus checkCopySnapshotsStatus(OpenstackBlockCloneVolumesContext context, List<StorageLogMessage> logMessages) {
-		return null;
-	}
 	
 	
 	private void createTargetVolume(OpenstackBlockCloneVolumesContext context, OpenstackBlockCloneVolumeStatus status, boolean source) throws  CloudClientException {
@@ -741,7 +724,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 			  snapshotId = status.volumeToBeCloned.targetVolumeId;
 		  }
 		  String ebsType = null;
-		  int iops = 0;
+	
 		
 		  String volumeId = status.volumeToBeCloned.sourceVolumeId;
 	      Volume sourceVolume = openstackClient.getVolume(volumeId);
@@ -757,12 +740,12 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	
 	
 	private void createTargetSnapshot(String snapshotId, OpenstackBlockCloneVolumeStatus status,String operationId) throws CloudClientException {
-		  String[] keys = {OpenstackConstants.TARGET_VOLUME_TAG, OpenstackConstants.CLONE_OPERATION_TAG};
+		 
 		  String[] values = new String[2];
 		  values[1] = operationId;
 		  String targetRegion = status.volumeToBeCloned.targetStorageSystemId.substring(status.volumeToBeCloned.targetStorageSystemId.indexOf(':')+1);
 		  VolumeSnapshot snapshot = openstackClient.copy(snapshotId, targetRegion , "LVM Snapshot to clone Volume " + status.volumeToBeCloned.sourceVolumeId);
-		 //is this used??
+		
 		  status.targetSnapshotId = targetRegion + ':' + snapshot.getId();
       
 	}

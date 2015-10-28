@@ -24,9 +24,7 @@ public class VirtualizationSerializationFactory implements ISerializationFactory
 	
 	public VirtualizationSerializationFactory() {
 		super();
-		/*
-		 *  SAP OpenStack
-		 */
+		
 		addClass(OpenStackVirtOpContext.class);
 	}
 	
@@ -49,7 +47,7 @@ public class VirtualizationSerializationFactory implements ISerializationFactory
 	public Object createInstance(String className) throws EngineException {
 		try {
 			return createClass(className).newInstance();
-		} catch (Exception e) { //$JL-EXC$
+		} catch (Exception e) { 
 			throw new EngineException("Error occured when instantiating class '" + className + "'", e);
 		}
 	}
@@ -79,7 +77,7 @@ public class VirtualizationSerializationFactory implements ISerializationFactory
 		Field[] fields = cl.getFields();
 		if (fields.length==0)
 			return true;
-		Field[] declaredfields = cl.getDeclaredFields();
+
 		for (Field field : fields) {
 			if(field.isAnnotationPresent(SerializableField.class)) {
 				anySerializableFieldAnnotationPresent=true;

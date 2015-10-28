@@ -328,7 +328,7 @@ public class OpenStack_CloudController {
 	}
 
 	/**
-	 * Used by to provision instances process. If the parameter passed to the executeOperation method is a serverID instead of an imageID
+	 * Used by provision instances process. If the parameter passed to the executeOperation method is a serverID instead of an imageID
 	 * we first "backup" the server i.e. create an image
 	 * 
 	 * @param instanceID
@@ -743,7 +743,7 @@ public class OpenStack_CloudController {
 					String subnetId = port.getFixedIps().iterator().next()
 					.getSubnetId();
 
-					// try to dettach to target interface
+					// try to detach to target interface
 					Port updatedPort = os.networking().port().update(
 							port.toBuilder().removeFixedIp(virtualHostIPAddress, subnetId) 
 

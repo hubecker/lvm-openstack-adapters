@@ -39,8 +39,8 @@ public class OpenstackBlockCloudStorageController {
 	private String proxyHost;
 	private int proxyPortint;
 	private String proxyPort;
-	private String proxyPassword; //TODO: not supported in Openstack4j, remove from UI
-	private String proxyUsername; //TODO: not supported in Openstack4j, remove from UI
+//	private String proxyPassword; // not supported 
+//	private String proxyUsername; // not supported 
 
 	public OpenstackBlockCloudStorageController 
 	(String accountId,String endpoint, String region,
@@ -71,6 +71,7 @@ public class OpenstackBlockCloudStorageController {
 			if (MiscUtil.notNullAndEmpty(proxyHost) && (proxyPort!=null))
 			{	int proxyPortint=Integer.parseInt(proxyPort);
 			this.proxyPortint=proxyPortint;
+			//can be used for testing proxy ; will set global proxy for all adapters
 			//			System.setProperty("https.proxySet", "true");
 			//			System.setProperty("https.proxyHost",this.proxyHost);
 			//			System.setProperty("https.proxyPort", this.proxyPort);
@@ -104,7 +105,6 @@ public class OpenstackBlockCloudStorageController {
 		OSClient os=getOs();
 		snapshotId = getOpenstackId(snapshotId);
 		availabilityZone = getOpenstackId(availabilityZone);
-		VolumeSnapshot sourceSnapshot=getSnapshot(snapshotId);
 	
 		VolumeBuilder volBuilder = Builders.volume()
 		.name("Cloned Volume")
@@ -210,7 +210,7 @@ public class OpenstackBlockCloudStorageController {
 	}
 
 	public List<String> listAvailabilityZones(String region) {
-		OSClient os=getOs();
+	//	OSClient os=getOs();
 		ArrayList<String> zoneNames=new ArrayList<String>();
 //		List<? extends AvailabilityZone> zones = os.compute().zones().list();
 //		//zoneItr=zones.iterator();
@@ -256,7 +256,7 @@ public class OpenstackBlockCloudStorageController {
 		if (storageVolumeId.contains(":"))
 			storageVolumeId=storageVolumeId.split(":")[1];
 		Volume volume=os.blockStorage().volumes().get(storageVolumeId);
-		String serverId=volume.getAttachments().get(0).getServerId(); //TODO: verify this
+		String serverId=volume.getAttachments().get(0).getServerId(); 
 		ActionResponse response = os.compute().servers().detachVolume(serverId, storageVolumeId);
 		return response;
 
@@ -266,7 +266,6 @@ public class OpenstackBlockCloudStorageController {
 			String device) {
 	
 		OSClient os=getOs();
-		VolumeAttachment res =null;
 		storageVolumeId=getOpenstackId(storageVolumeId);
 		String updatedStatus=getVolume(storageVolumeId).getStatus().toString();
 		//we have to check here if the volume is available before attaching 

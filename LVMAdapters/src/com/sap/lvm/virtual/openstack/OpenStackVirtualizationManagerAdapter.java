@@ -22,8 +22,6 @@ public class OpenStackVirtualizationManagerAdapter implements IVirtualizationMan
 	public OpenStackVirtualizationManagerAdapter(IVirtManagerAdapterConfig config) throws CloudClientException {
 		logger = config.getLogger();
 	
-		String sublocation = "OpenStackVirtualizationManagerAdapter(IVirtManagerAdapterConfig)"; // the method / constructor name
-		//logger.logError(sublocation, "Log TEST error", null);
 		Properties connectionProps = config.getVirtManagerAdditionalConfigProps();
 	//	Properties secProps = config.getVirtManagerAdditionalSecConfigProps();
 		OpenStack_CloudController osClient = new OpenStack_CloudController(config.getUrl(), connectionProps.getProperty(OpenStackConstants.REGION), config.getUser(),  

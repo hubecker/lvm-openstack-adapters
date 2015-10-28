@@ -41,23 +41,21 @@ static public String DOMAIN_INFRASTRUCTURE="InfrastructureTexts";
 		
 		TranslatableString key2 = new TranslatableString(OpenStackConstants.REGION, DOMAIN_INFRASTRUCTURE, "REGION");
 		TranslatableString description2 = new TranslatableString(OpenStackConstants.REGION, DOMAIN_INFRASTRUCTURE, "REGION");
-//		
-//		TranslatableString key3 = new TranslatableString(OpenStackConstants.SECRET_KEY, DOMAIN_INFRASTRUCTURE, "SECRET_KEY");
-//		TranslatableString description3 = new TranslatableString(OpenStackConstants.SECRET_KEY_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "SECRET_KEY_DESCRIPTION");
-//		
+		
 		TranslatableString key4 = new TranslatableString(OpenStackConstants.PROXY_HOST, DOMAIN_INFRASTRUCTURE, "PROXY_HOST");
 		TranslatableString description4 = new TranslatableString(OpenStackConstants.PROXY_HOST_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_HOST_DESCRIPTION");
 		
 		TranslatableString key5 = new TranslatableString(OpenStackConstants.PROXY_PORT, DOMAIN_INFRASTRUCTURE, "PROXY_PORT");
 		TranslatableString description5 = new TranslatableString(OpenStackConstants.PROXY_PORT_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_PORT_DESCRIPTION");
-		
+//		Proxy user name and password currently not supported
+//		
 //		TranslatableString key6 = new TranslatableString(OpenStackConstants.PROXY_USER_NAME, DOMAIN_INFRASTRUCTURE, "PROXY_USER_NAME");
 //		TranslatableString description6 = new TranslatableString(OpenStackConstants.PROXY_USER_NAME_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_USER_NAME_DESCRIPTION");
 //		
 //		TranslatableString key7 = new TranslatableString(OpenStackConstants.PROXY_PASS, DOMAIN_INFRASTRUCTURE, "PROXY_PASS");
 //		TranslatableString description7 = new TranslatableString(OpenStackConstants.PROXY_PASS_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_PASS_DESCRIPTION");
-//		Volume v;
-		//TENANT
+
+		//TENANT i.e. Project
 		ConfigPropMetaData configMetaData1 = new ConfigPropMetaData(key1, ValueType.STRING, description1, true);
 		configMetaDatas.add(configMetaData1);
 			

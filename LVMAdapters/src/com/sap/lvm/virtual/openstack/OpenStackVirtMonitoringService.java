@@ -48,7 +48,7 @@ public class OpenStackVirtMonitoringService implements IVirtMonitoringService {
 	IJavaEeLog j2eeLog;
 	public OpenStackVirtMonitoringService(
 			OpenStack_CloudController openStackClient, String region,
-			IJavaEeLog iJavaEeLog) {// ,IJavaEeLog logger) {
+			IJavaEeLog iJavaEeLog) {
 		j2eeLog=iJavaEeLog;
 		this.openStackClient = openStackClient;
 		List<String> regionsOpenStack = new ArrayList<String>();
@@ -58,10 +58,10 @@ public class OpenStackVirtMonitoringService implements IVirtMonitoringService {
 		this.regions = regionsOpenStack;
 	}
 
-	// TODO: see VSphere hosts props for missing props in openStack vms
+
 	@Override
 	public Collection<VirtPropertyMetaData> getVirtPropertyMetaData() {
-		// TODO Auto-generated method stub
+		
 		return new ArrayList<VirtPropertyMetaData>();
 	}
 
@@ -180,7 +180,7 @@ public class OpenStackVirtMonitoringService implements IVirtMonitoringService {
 							} else if ((status.name().equalsIgnoreCase(OpenStackConstants.OpenStackInstanceStates.pending.name()))
 									|| ((status.name().equalsIgnoreCase("SPAWNING")))
 									|| ((status.name().equalsIgnoreCase("BUILD")))) { 
-									// TODO:// add "pending" to VirtualHostState
+									// TODO: add "pending" to VirtualHostState
 								vm.properties.setProperty(VirtPropertyMetaData.VS_PROPERTY_POWER_STATE,VirtPropertyValues.VirtualHostState.Defined.name());
 								operations.add(VirtDefaultOperation.STOP);
 								operations.add(VirtDefaultOperation.DESTROY);
@@ -209,7 +209,7 @@ public class OpenStackVirtMonitoringService implements IVirtMonitoringService {
 						Map<String, List<? extends Address>> addresses = vmRecord
 								.getAddresses().getAddresses();
 						// TODO: iterate through keyset, this will only extract the first set e.g. private IPs
-							// List<? extends Port> ports = openStackClient.getOs().networking().port().list();
+			
 						if (addresses != null && addresses.isEmpty()) {
 							ip = openStackClient.getInstanceAddresses(vmRecord.getId());
 						}
@@ -226,12 +226,11 @@ public class OpenStackVirtMonitoringService implements IVirtMonitoringService {
 									.get(key1);
 							Address addressRecord = addressesForKey.get(0);
 							if (addressRecord.getAddr().length()>1)
-							//ip += addressRecord.getAddr();
+						
 							adressList.add(addressRecord.getAddr());
 							for (int i = 1; i < addressesForKey.size(); i++) {
 								addressRecord = addressesForKey.get(i);
 								if (addressRecord.getAddr().length()>1)
-						//		ip += "," + addressRecord.getAddr();
 								adressList.add(addressRecord.getAddr());
 
 							}
@@ -276,6 +275,9 @@ public class OpenStackVirtMonitoringService implements IVirtMonitoringService {
 						}						vm.supportedOperations = OpenStackConstants.OpenStack_SUPPORTED_OPERATIONS;
 						vm.enabledOperations = operations;
 						vm.properties.setProperty(VirtPropertyMetaData.VS_PROPERTY_POWER_STATE_DETAIL,status.name() == null ? "" : status.name());
+
+						//This code can slow down performance but it is currently needed for on the fly provisioning
+				
 //						String osType = openStackClient.getOSType(vmRecord);
 //						if (osType != null) {
 //							vm.properties.setProperty(VirtPropertyMetaData.VS_PROPERTY_OS, osType);

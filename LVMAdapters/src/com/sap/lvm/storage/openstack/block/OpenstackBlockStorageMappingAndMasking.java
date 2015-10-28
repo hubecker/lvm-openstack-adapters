@@ -91,7 +91,7 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 					logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(),
 							"Volunme: " + volumeDetails.storageVolume.storageVolumeId + " is in unexpected state: " + volume.getStatus() + " for the operation"));
 				}
-				//	} catch (CloudClientException e) {
+			
 			} catch (Exception e) {
 				logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "postDetachVolume:" + e.getMessage(), null,e);
 				logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
@@ -110,7 +110,7 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 							//$JL-EXC$
 						}
 					}
-					//  } catch (CloudClientException e) {
+
 				} catch (Exception e) {
 
 					logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
@@ -152,14 +152,14 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 			masking = request.maskingProperties.get(volumeDetails);
 			if (masking.sourcePhysicalHostnames != null && masking.sourcePhysicalHostnames.size() > 0) {
 				if (masking.targetPhysicalHostnames != null && masking.targetPhysicalHostnames.size() == 1) {
-					//if source and target physical hostnames are the same (ebs volume can be only attached to 1 instance at a time) no need to detach/re-attach 
+					//if source and target physical hostnames are the same ( block volume can be only attached to 1 instance at a time) no need to detach/re-attach 
 					if (masking.sourcePhysicalHostnames.get(0).equals(masking.targetPhysicalHostnames.get(0))) {
 						try {
 							volume = openstackClient.getVolume(volumeDetails.storageVolume.storageVolumeId);
 							if (volume == null) {
 								return StorageAdapterImplHelper.createFailedResponse("Volume: " + volumeDetails.storageVolume.storageVolumeId + " does not exist",PreAttachVolumeResponse.class); 
 							}
-							//  	    } catch (CloudClientException e) {
+					
 						} catch (Exception e) {
 							logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG , this.getClass().getName(), "preAttachVolume:", null, e);
 							return StorageAdapterImplHelper.createFailedResponse(e.getMessage(), PreAttachVolumeResponse.class); 
@@ -168,7 +168,7 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 						if (OpenstackVolumeStates.inuse.toString().equals(volume.getStatus())) {
 							masking = request.maskingProperties.get(volume);
 							expectedInstanceId = masking.hostProperties.get(masking.targetPhysicalHostnames.get(0)).getProperty(MaskingProperties.PROP_KEY_VIRTUAL_RESOURCE_ID);
-							// instanceId = volume.getAttachments().get(0).getInstanceId();
+							
 							//check if the volume is attached to the correct instance - if not, do not detach as state is undefined
 							if (expectedInstanceId.equals(instanceId)){
 								continue;
@@ -201,7 +201,7 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 							} else {
 								return StorageAdapterImplHelper.createFailedResponse("Volunme: " + volumeDetails.storageVolume.storageVolumeId + " is in unexpected state: " + volume.getStatus() + " for the operation",PreAttachVolumeResponse.class);
 							}
-							//  	    } catch (CloudClientException e) {
+					
 						} catch (Exception e) {
 							logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG , this.getClass().getName(), "preAttachVolume:", null, e);
 							return StorageAdapterImplHelper.createFailedResponse(e.getMessage(), PreAttachVolumeResponse.class); 
@@ -228,11 +228,9 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 					if (volume == null) {
 						return StorageAdapterImplHelper.createFailedResponse("Volume: " + volumeDetails.storageVolume.storageVolumeId + " does not exist",PreAttachVolumeResponse.class); 
 					}
-					//  if (volume.getAttachments().size() == 0) {
+					
 					currentState = volume.getStatus();
-					// } else {
-					//    currentState =   volume.getAttachments().get(0).getStatus();
-					//  }
+				
 					//volumes may still be detaching from the source host so we have to wait until detached.
 				
 					if (currentState.toString().equals(OpenstackAttachmentStatus.attaching.name())) { //wait if volumes are still attaching
@@ -247,7 +245,7 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 					}
 					if (currentState.equals(OpenstackAttachmentStatus.detached.toString())||currentState.toString().equalsIgnoreCase(OpenstackVolumeStates.available.toString())) {//attach if detached
 						volumesToAttach.put(device,volumeDetails.storageVolume.storageVolumeId+"##"+ instanceId );
-						//  openstackClient.attachVolume(volumeDetails.storageVolume.storageVolumeId, instanceId, device);
+					
 
 					} else if ((currentState.equals(OpenstackAttachmentStatus.attached.name()))||(currentState.toString().equals(Status.IN_USE.toString()))) {
 						if (volume.getAttachments().get(0).getServerId().equals(instanceId)) {
@@ -270,7 +268,7 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 
 		}
 		
-		//Openstack bug : the VM may ignore the specified device name e.g. if you try to attach volume X as device /dev/vdc then if /dev/vdb does not yet
+		//Openstack quirk: the VM may ignore the specified device name e.g. if you try to attach volume X as device /dev/vdc then if /dev/vdb does not yet
 		//exist it will attach the volume to /dev/vdb BUT it reports back that it's attached to /dev/vdc
 		//The workaround here is to sort the volumes by device name before attaching 
 		
@@ -281,7 +279,7 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 			String volumeid=volumeAndInstance[0];
 			String instanceid=volumeAndInstance[1];
 			logger.log(IJavaEeLog.SEVERITY_INFO , this.getClass().getName(),"attaching "+deviceName+" with volumeID "+volumeid +" to:"+instanceid , null);
-//			String updatedStatus=openstackClient.getVolume(volumeid).getStatus().toString();
+
 //			if (OpenstackVolumeStates.available.toString().equals(updatedStatus)) 	
 				openstackClient.attachVolume(volumeid, instanceid, deviceName);
 //			else 

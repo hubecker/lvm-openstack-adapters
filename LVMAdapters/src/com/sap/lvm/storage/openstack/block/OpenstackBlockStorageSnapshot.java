@@ -78,7 +78,7 @@ public class OpenstackBlockStorageSnapshot implements IStorageSnapshot {
 		logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "listSnapshots: volumes:" +request.storageVolumes , null);
 		StorageOperationResponse<ListSnapshotsResponse> response = null;
 		try {
-			List<VolumeSnapshot> snapshots  = null;
+		//	List<VolumeSnapshot> snapshots  = null;
 			Map<StorageVolume, List<StorageSnapshotVolume>> internalSnapshots = new HashMap<StorageVolume, List<StorageSnapshotVolume>>();
 			//for(StorageVolume volume:request.storageVolumes){
 			//	snapshots = ((Object) openstackClient).getVolumeSnapshots(volume.storageVolumeId);
@@ -88,7 +88,7 @@ public class OpenstackBlockStorageSnapshot implements IStorageSnapshot {
 			payload.storageVolumeToSnapshots = internalSnapshots;
 			response = new StorageOperationResponse<ListSnapshotsResponse>(payload);
 			logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "listSnapshots: found:" + internalSnapshots.size() + " snapshots: " + internalSnapshots , null);
-	//	} catch (CloudClientException e) {
+	
 		} catch (Exception e) {
 			logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "listSnapshots:" + e.getMessage(), null,e);
 			return StorageAdapterImplHelper.createFailedResponse(e.getMessage(), ListSnapshotsResponse.class); 
@@ -107,7 +107,7 @@ public class OpenstackBlockStorageSnapshot implements IStorageSnapshot {
 		response.setContext(request.takeSnapshotResult);
 		StorageOperationId id = new StorageOperationId();
 		id.id = OpenstackAdapterUtil.generateOperationId();
-		id.type = "snapshot";//TODO
+		id.type = "snapshot";
 		response.setId(id);
 		response.setPercentCompleted(0);
 		response.setStatus(StorageOperationStatus.EXECUTING);
@@ -141,11 +141,11 @@ public class OpenstackBlockStorageSnapshot implements IStorageSnapshot {
 		for (StorageVolume volume : prepareRequest.storageVolumesToBeSnapshot) {
 			VolumeSnapshot snapshot = null;
 			try {
-	//			snapshot = openstackClient.createSnapshot(volume.storageVolumeId, prepareRequest.snapshotName);
+	
 				StorageSnapshotVolume storageVolumeSnapshot = OpenstackAdapterUtil.toStorageSnapshot(snapshot, volume.storageSystemId);
 				storageVolumeSnapshotList.add(storageVolumeSnapshot);
 				context.snapshotIds.add(storageVolumeSnapshot.storageVolumeId);
-		//	} catch (CloudClientException e) {
+	
 			} catch (Exception e) {
 				logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "takeSnapshot:" + e.getMessage(), null,e);
 				cancelSnapshots(storageVolumeSnapshotList);
@@ -179,7 +179,7 @@ public class OpenstackBlockStorageSnapshot implements IStorageSnapshot {
 			try {
 				logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "cancelSnapshots: operationId:" + operationId +" deleting snapshot: " + snapshotId , null);
 		//	 openstackClient.deleteSnapsho(snapshotId);
-//			} catch (CloudClientException e) {
+
 			} catch (Exception e) {
 				logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "cancelSnapshots", null,e);
 		    	logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), e.getMessage()));	
@@ -211,23 +211,24 @@ public class OpenstackBlockStorageSnapshot implements IStorageSnapshot {
 		for (int i=0;i<context.snapshotIds.size();i++) {
 	    	try {
 	    	   snapshotId = context.snapshotIds.get(i);
-	    	   if (snapshotId == null) continue;//snapshot already completed
+	    	   if (snapshotId == null) 
+	    		   continue;//snapshot already completed
 	    	 //  snapshot = openstackClient.getSnapshotStatus(snapshotId);
 	    	 //  snapshotState  = snapshot.getState();
 	    	    logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus: operationId:" + operationId +" checking snapshot:" + snapshotId + " state is: " + snapshotState , null);
-	    	    if (snapshotState.toString().equals("pending")|| (snapshotState.toString().equals("creating"))) {
-	    		//   progress = Integer.parseInt(snapshot.getProgress()); //TODO might need to be trimmed if it has % at the end
-	    		   if (progress < operationProgress) operationProgress = progress;
-	    		   pending = true;
-	    	   } else if (snapshotState.equals("completed")) {
-	    		  context.snapshotIds.set(i,null);
-	    	   } else if (snapshotState.equals("error")) {
-	    		   logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), "Failed to Snapshot volume " + context.volumes.get(i).storageVolumeId +". Snapshot process terminated with ERROR") );	
-	    	       failed = true;
-	    		   break;
-	    	   } else {
-	    		   throw new IllegalStateException("Failed to Snapshot volume " + context.volumes.get(i).storageVolumeId +". Snapshot process returned unexpected status: " + snapshotState);
-	    	   }
+//	    	    if (snapshotState.toString().equals("pending")|| (snapshotState.toString().equals("creating"))) {
+//	    		//   progress = Integer.parseInt(snapshot.getProgress()); //TODO might need to be trimmed if it has % at the end
+//	    		   if (progress < operationProgress) operationProgress = progress;
+//	    		   pending = true;
+//	    	   } else if (snapshotState.equals("completed")) {
+//	    		  context.snapshotIds.set(i,null);
+//	    	   } else if (snapshotState.equals("error")) {
+//	    		   logMessages.add(new StorageLogMessage(IJavaEeLog.SEVERITY_ERROR, "OSBlock", System.currentTimeMillis(), "Failed to Snapshot volume " + context.volumes.get(i).storageVolumeId +". Snapshot process terminated with ERROR") );	
+//	    	       failed = true;
+//	    		   break;
+//	    	   } else {
+//	    		   throw new IllegalStateException("Failed to Snapshot volume " + context.volumes.get(i).storageVolumeId +". Snapshot process returned unexpected status: " + snapshotState);
+//	    	   }
 	    	} catch (Exception e) {
 	    	   failed = true;
 	    	   logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus:" + e.getMessage(), null,e);

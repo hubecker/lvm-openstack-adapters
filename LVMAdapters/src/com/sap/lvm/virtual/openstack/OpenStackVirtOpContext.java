@@ -12,7 +12,7 @@ import com.sap.tc.vcm.virtualization.adapter.api.base.IVirtOpContext;
 
 @SerializableClass
 public class OpenStackVirtOpContext implements IVirtOpContext{
-	//private static Location log = Location.getLocation(OpenStackVirtOpContext.class);
+
 	
 	@SerializableField
 	private String entityId;

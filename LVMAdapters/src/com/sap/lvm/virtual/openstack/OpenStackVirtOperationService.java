@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.glassfish.hk2.utilities.reflection.Logger;
 import org.openstack4j.model.compute.Server;
 
 import com.sap.lvm.virtual.openstack.OpenStackConstants.OpenStackCloneSteps;
@@ -14,10 +13,7 @@ import com.sap.lvm.virtual.openstack.OpenStackConstants.OpenStackInstanceStates;
 import com.sap.nw.lm.aci.engine.api.base.property.IProperty;
 import com.sap.nw.lm.aci.engine.api.base.property.ISimpleProperty;
 import com.sap.nw.lm.aci.engine.api.base.property.IPropertyType.ValueType;
-//import com.sap.nw.lm.aci.engine.base.api.i18n.I18nTexts;
-//import com.sap.nw.lm.aci.engine.base.api.i18n.I18nTexts;
 import com.sap.nw.lm.aci.engine.base.api.i18n.TranslatableString;
-
 import com.sap.tc.vcm.infrastructure.api.adapter.InfrastructAdapterException;
 import com.sap.tc.vcm.infrastructure.api.adapter.config.ConfigPropMetaData;
 import com.sap.tc.vcm.infrastructure.api.adapter.config.IInfrastructAdapterConfigMetaData.ConfigRequirement;
@@ -29,7 +25,6 @@ import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpSyncResponse;
 import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOperationId;
 import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpResponse.VirtLogMessage;
 import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpResponse.VirtOperationStatus;
-import com.sap.tc.vcm.virtualization.adapter.api.monitoring.RetrieveCompleteVirtLandscapeRequest;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.AdditionalOperationMetaDataRequest;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.AdditionalOperationMetaDataResponse;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.IVirtNetworkOperationService;
@@ -67,8 +62,7 @@ import com.sap.tc.vcm.virtualization.adapter.api.operation.sync.ExecuteOperation
 import com.sap.tc.vcm.virtualization.adapter.api.types.LegacyVirtEntityType;
 import com.sap.tc.vcm.virtualization.adapter.api.types.TypedEntityId;
 import com.sap.tc.vcm.virtualization.adapter.api.types.VirtPropertyKeys.VirtPredefinedOperationProperties;
-//import com.sap.tc.vcm.virtualization.adapterimpl.openstack.OpenStackConstants.OpenStackCloneSteps;
-//import com.sap.tc.vcm.virtualization.adapterimpl.openstack.OpenStackConstants.OpenStackInstanceStates;
+
 
 public class OpenStackVirtOperationService implements IVirtOperationService, IVirtNetworkOperationService {
 

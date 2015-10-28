@@ -64,28 +64,22 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 			String region = openstackClient.getOpenstackId(request.storageSystemId);
 			try {
 				zones = openstackClient.listAvailabilityZones(region);
-			//} catch (CloudClientException e) {
+		
 			} catch (Exception e) {
 				logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getStoragePools:" + e.getMessage(), null,e);
 			   	return StorageAdapterImplHelper.createFailedResponse(e.getMessage(), GetStoragePoolsResponse.class); 
 			}
-			StoragePool volumePool = null;
+		
 			for (String zone:zones) {
 				storagePools.add(OpenstackAdapterUtil.createStoragePool(zone, region, accountId, totalSpaceGB, usedSpaceGB));
 			}
-			/*
-			volumePool = new StoragePool(region+":"+OpenstackConstants.Openstack_POOL_SNAPSHOTS);
-			volumePool.name=OpenstackConstants.Openstack_POOL_SNAPSHOTS
-			volumePool.storageSystemId = request.storageSystemId;
-			volumePool.poolType = StoragePoolType.SnapshotPool;
-			storagePools.add(volumePool);
-			*/
+		
 		} else {
 		  if (request.storagePoolIds == null || request.storagePoolIds.isEmpty()) {
 			  return StorageAdapterImplHelper.createFailedResponse("Bad request: both storageSystemId and storagePoolIds are null", GetStoragePoolsResponse.class);  
 		  }
 		  try {
-              StoragePool volumePool = null;
+         
 			  String zone = null;
 			  String region = null;		  
 			  for (String poolId:request.storagePoolIds) {
@@ -106,7 +100,7 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 				    }
 				 }
 			   }
-//		  } catch (CloudClientException e) {
+
 		  } catch (Exception e) {
 			logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getStoragePools:" + e.getMessage(), null,e);
 			return StorageAdapterImplHelper.createFailedResponse(e.getMessage(), GetStoragePoolsResponse.class); 
@@ -164,7 +158,7 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 		response.setPercentCompleted(100);
 		response.setStatus(StorageOperationStatus.COMPLETED);
 		return response;
-	//	} catch (CloudClientException e) {
+
 		  } catch (Exception e) {
 			logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getStorageSystems:" + e.getMessage(), null,e);
 			return StorageAdapterImplHelper.createFailedResponse(e.getMessage(), GetStorageSystemsResponse.class); 
@@ -177,7 +171,6 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 			GetStorageVolumesRequest request) {
 		//volume id format = region:volume_id or region:volume_id_tag for cloned volumes
 		
-	//	logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getStorageVolumes: request:" +request.storagePoolId + " " + request.storageSystemId + " " + request.storageVolumeIds, null);
 		StorageOperationResponse<GetStorageVolumesResponse> response = null;
 		try {
 			List<StorageVolume> internalVolumes = null;
@@ -201,8 +194,7 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 					}
 				}
 				internalVolumes = OpenstackAdapterUtil.transformToStorageVolumeList(volumeList,request.storageSystemId);
-		//		logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getStorageVolumes: volumes found: " + internalVolumes.size() + " volumes: " + internalVolumes , null);
-				
+					
 			} else {
 			   internalVolumes = new ArrayList<StorageVolume>();
 		       for (String volumeId:request.storageVolumeIds) {
@@ -213,7 +205,6 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 		    		   internalVolumes.add(OpenstackAdapterUtil.toStorageVolume(vol, accountId +':'+ openstackClient.getRegion(volumeId)));
 		    	   }
 		       }
-		//       logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getStorageVolumes: volumes found: " + internalVolumes.size() + " volumes: " + internalVolumes , null);
 			}
 			
 			GetStorageVolumesResponse payload = new GetStorageVolumesResponse();
@@ -221,7 +212,7 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 			response = new StorageOperationResponse<GetStorageVolumesResponse>(payload);
 			response.setPercentCompleted(100);
 			response.setStatus(StorageOperationStatus.COMPLETED);
-	//	} catch (CloudClientException e) {
+
 		} catch (Exception e) {
 			
 			logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG , this.getClass().getName(), "getStorageVolumes:", null, e);
@@ -254,16 +245,7 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 		         if (mountData.exportPath == null || !mountData.exportPath.contains(":")) {
 		        	 logger.log(IJavaEeLog.SEVERITY_WARNING, this.getClass().getName(), "retrieveVolumesFromLvmMountConfiguration: missing exportPath for mountPoint:" + mountData.mountPoint, null);
 		     		 continue;
-		        	 /* Map<String,Volume> volume;
-		        	 try {
-		        	   volume  = openstackClient.getVolumesByServiceIdAndMountPoint(serviceId,mountData.mountPoint);
-		        	   if (volume == null) continue;
-		        	   region = volume.keySet().iterator().next();
-		        	   volumeId = volume.get(region).getVolumeId();
-		        	 } catch (CloudClientException e) {
-				       logger.traceThrowable(IJavaEeLog.SEVERITY_DEBUG , this.getClass().getName(), "retrieveVolumesFromLvmMountConfiguration:", null, e);
-				       continue;
-			         }*/
+		        	
 		         } else {
 			         tokenizer = new StringTokenizer(mountData.exportPath,":");
 			         region = tokenizer.nextToken();
