@@ -40,7 +40,7 @@ public class OpenstackBlockStorageManagerAdapter extends AbstractStorageManagerA
 		   openstackClient = new OpenstackBlockCloudStorageController(config.getLabel(),config.getUrl(),  connectionProps.get(OpenstackConstants.REGION),
 					config.getUser(),config.getPassword(), connectionProps.get(OpenstackConstants.TENANT),connectionProps.get(OpenstackConstants.PROXY_HOST), 
 					connectionProps.get(OpenstackConstants.PROXY_PORT), connectionProps.get(OpenstackConstants.PROXY_USER_NAME), 
-					secProps.get(OpenstackConstants.PROXY_PASS));//,config.getLogger());
+					secProps.get(OpenstackConstants.PROXY_PASS));
 
 		 	  } catch (CloudClientException e) {
 	

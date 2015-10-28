@@ -34,7 +34,7 @@ public class SerializationFactory implements ISerializationFactory {
 		addClass(OpenstackBlockCloneVolumesContext.class);
 		addClass(OpenstackBlockCloneVolumeStatus.class);
 
-    //Openstack File    
+		//Openstack File    
  		addClass(OpenstackFileSnapshotVolumesContext.class);
 		addClass(OpenstackFileCloneVolumesContext.class);
 		addClass(OpenstackFileCloneVolumeStatus.class);

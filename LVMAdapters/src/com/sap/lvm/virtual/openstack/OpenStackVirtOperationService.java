@@ -408,7 +408,7 @@ public class OpenStackVirtOperationService implements IVirtOperationService, IVi
 				availabilityZoneMetaData.setIsValueArray(false);
 				availabilityZoneMetaData.setValueSet(availabilityZones);
 				
-				if (flavorids.size() == 1) {
+				if (availabilityZones.size() == 1) {
 					availabilityZoneMetaData.setDefaultValue(availabilityZones.get(0).getString());
 				}
 				
