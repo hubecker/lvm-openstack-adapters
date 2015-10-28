@@ -6,6 +6,7 @@
 	<packaging>ear</packaging>
 	<version>1.0</version>
 	<name>LVMAdaptersApp</name>
+	<description>Builds SAP ear file for LVM Adapters for Openstack </description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
