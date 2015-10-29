@@ -11,7 +11,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-
 	<dependencies>
 		<!-- web modules -->
 		<dependency>
@@ -67,7 +66,7 @@
 					</modules>
 				</configuration>
 			</plugin>
-	
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
@@ -88,6 +87,23 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.10</version>
+				<configuration>
+					<projectnatures>
+						<projectnature>com.sap.ide.j2ee.adapter.ear.earNature</projectnature>
+						<projectnature>com.sap.ide.j2ee.adapter.ext.ear.earNature</projectnature>
+						<projectnature>com.sap.ide.j2ee.adapter.ext.ear.ArchiveProjectNature</projectnature>
+						<projectnature>org.eclipse.wst.common.project.facet.core.nature</projectnature>
+						<projectnature>org.eclipse.wst.common.modulecore.ModuleCoreNature</projectnature>
+
+					</projectnatures>
+
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
