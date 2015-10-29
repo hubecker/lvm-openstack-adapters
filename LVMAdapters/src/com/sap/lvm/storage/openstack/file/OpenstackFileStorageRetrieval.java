@@ -27,7 +27,6 @@ import com.sap.tc.vcm.storage.adapter.api.types.StorageSystem;
 import com.sap.tc.vcm.storage.adapter.api.types.StorageVolume;
 import com.sap.tc.vcm.storage.adapter.api.types.StorageVolumeDetails;
 
-
 public class OpenstackFileStorageRetrieval implements IStorageRetrieval {
 
 	private OpenstackFileCloudStorageController openstackClient = null;
@@ -109,7 +108,6 @@ public class OpenstackFileStorageRetrieval implements IStorageRetrieval {
 		return response;
 	}
 
-
 	@Override
 	public synchronized StorageOperationResponse<GetStorageSystemsResponse> getStorageSystems(GetStorageSystemsRequest request) {
 
@@ -160,7 +158,6 @@ public class OpenstackFileStorageRetrieval implements IStorageRetrieval {
 		}
 	}
 
-
 	@Override
 	public synchronized StorageOperationResponse<GetStorageVolumesResponse> getStorageVolumes(GetStorageVolumesRequest request) {
 
@@ -186,11 +183,10 @@ public class OpenstackFileStorageRetrieval implements IStorageRetrieval {
 						internalVolumes = new ArrayList<StorageVolume>();
 						List<String> listPools = openstackClient.listPools(backend);
 						for (String pool:listPools) {
-							List<Share> listShares = openstackClient.listShares(backend +":" + pool);
 							storagePoolId = backend+":"+pool;
+							List<Share> listShares = openstackClient.listShares(storagePoolId);
 							for (Share share : listShares) {
 								internalVolumes.add(OpenstackAdapterUtil.sharetoStorageVolume(share, storageSystemId, storagePoolId));
-								;
 							}
 						}
 					} else {

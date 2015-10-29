@@ -216,7 +216,6 @@ public class OpenstackFileCloudStorageController {
 	public List<Share> listShares(String storagePoolId) {
 
 		OSClient os=getOs();
-		storagePoolId = getOpenstackId(storagePoolId);
 		List<Share> listShares = new ArrayList<Share>();
 		
 		List<? extends Share> shares = os.fileStorage().shares().list();
