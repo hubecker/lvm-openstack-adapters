@@ -6,11 +6,11 @@ JarSAPProcessing-Version: 20090907.1000
 deployfile: sda-dd.xml
 archivetype: DC
 JarSAP-Version: 20090803.1000
-keyname: VirtualizationManagerOpenstackApp
+keyname: LVMAdaptersApp
 keyvendor: sap.com
 keylocation: localhost
 keycounter: 2015.10.07.10.47.41
-componentelement: <componentelement  name="VirtualizationManagerOpenstackApp" vendor="sa
+componentelement: <componentelement  name="LVMAdaptersApp" vendor="sa
  p.com" componenttype="DC" subsystem="NO_SUBSYS" location="localhost" c
  ounter="2015.10.07.10.47.41" deltaversion="F" updateversion="LB-201510
  07104742" componentprovider="SAP AG" archivetype="DC"/> 
