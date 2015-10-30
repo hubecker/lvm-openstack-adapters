@@ -64,6 +64,7 @@
 
 
 					</modules>
+					<version>5</version>
 				</configuration>
 			</plugin>
 
@@ -94,8 +95,14 @@
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.10</version>
 				<configuration>
+					<version>5.0</version>
+					<wtpversion>2.0</wtpversion>	
+					<additionalProjectFacets>
+						<jst.ear>5.0</jst.ear>
+						<jst.ext.ear>5.0</jst.ext.ear>
+					</additionalProjectFacets>
 					<projectnatures>
-						<projectnature>com.sap.ide.j2ee.adapter.ear.earNature</projectnature>
+					  	<projectnature>com.sap.ide.j2ee.adapter.ear.earNature</projectnature>
 						<projectnature>com.sap.ide.j2ee.adapter.ext.ear.earNature</projectnature>
 						<projectnature>com.sap.ide.j2ee.adapter.ext.ear.ArchiveProjectNature</projectnature>
 						<projectnature>org.eclipse.wst.common.project.facet.core.nature</projectnature>
