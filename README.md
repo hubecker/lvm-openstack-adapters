@@ -88,12 +88,14 @@ LVMAdapters:  contains java sources for the Openstack storage manager virtualiza
 LVMAdaptersApp: App project, contains a pom.xml that builds the deployable ear file containing the above war file and some SAP specific files                  
 
 
-Note: To make modifications to the code in eclipse, first generate the eclipse files:
+Note: To make modifications to the code in eclipse, first generate the eclipse files(after packaging):
 ```
 mvn  eclipse:eclipse
 ```
 
 Then import the external projects under File->Import Existing projects into workspace and then navigate to the lvm-openstack-adapters directory
+
+Note: You may need to manually set your M2_REPO variable in the eclipse Java Build path view for the LVMAdapters project (in Windows this is typically in c:\users\<username>\.m2) 
 
 ##Other maven commands
 You can use maven to generate the javadocs by excuting: 

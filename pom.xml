@@ -9,10 +9,10 @@
 	<version>1.0</version>
 	<name>LVM Openstack Adapter Parent Project</name>
 	<description>Orchestration of war and ear builds of LVM OpenStack Adapters  </description>
- 	<properties>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  	</properties>
-  
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<modules>
 		<module>LVMAdapters/lib</module>
 		<module>LVMAdapters</module>
@@ -32,7 +32,7 @@
 	<build>
 		<pluginManagement>
 
-			<plugins>	
+			<plugins>
 				<plugin>
 					<version>2.4</version>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -64,6 +64,6 @@
 		</dependency>
 
 	</dependencies>
- 
+
 
 </project>

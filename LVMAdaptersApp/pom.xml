@@ -10,17 +10,17 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-<reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.8.1</version>
-  
-      </plugin>
-     
-    </plugins>
-  </reporting>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.8.1</version>
+
+			</plugin>
+
+		</plugins>
+	</reporting>
 	<dependencies>
 		<!-- web modules -->
 		<dependency>
@@ -47,11 +47,11 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/LVMAdaptersApp-1.0/META-INF
+							<outputDirectory>${basedir}/target/LVMAdaptersApp-1.0
 							</outputDirectory>
 							<resources>
 								<resource>
-									<directory>EarContent/META-INF</directory>
+									<directory>EarContent</directory>
 
 								</resource>
 							</resources>
@@ -106,13 +106,13 @@
 				<version>2.10</version>
 				<configuration>
 					<version>5.0</version>
-					<wtpversion>2.0</wtpversion>	
+					<wtpversion>2.0</wtpversion>
 					<additionalProjectFacets>
 						<jst.ear>5.0</jst.ear>
 						<jst.ext.ear>5.0</jst.ext.ear>
 					</additionalProjectFacets>
 					<projectnatures>
-					  	<projectnature>com.sap.ide.j2ee.adapter.ear.earNature</projectnature>
+						<projectnature>com.sap.ide.j2ee.adapter.ear.earNature</projectnature>
 						<projectnature>com.sap.ide.j2ee.adapter.ext.ear.earNature</projectnature>
 						<projectnature>com.sap.ide.j2ee.adapter.ext.ear.ArchiveProjectNature</projectnature>
 						<projectnature>org.eclipse.wst.common.project.facet.core.nature</projectnature>
