@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.sap.lvm.CloudClientException;
 import com.sap.nw.lm.aci.engine.api.base.property.IPropertyType.ValueType;
 import com.sap.nw.lm.aci.engine.base.api.i18n.TranslatableString;
 import com.sap.tc.vcm.infrastructure.api.adapter.InfrastructAdapterException;

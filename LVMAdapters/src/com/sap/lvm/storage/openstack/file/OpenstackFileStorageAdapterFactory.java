@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.sap.lvm.storage.openstack.util.CloudClientException;
+import com.sap.lvm.CloudClientException;
 import com.sap.lvm.storage.openstack.util.OpenstackConstants;
 import com.sap.nw.lm.aci.engine.api.base.property.IPropertyType.ValueType;
 import com.sap.nw.lm.aci.engine.base.api.i18n.TranslatableString;

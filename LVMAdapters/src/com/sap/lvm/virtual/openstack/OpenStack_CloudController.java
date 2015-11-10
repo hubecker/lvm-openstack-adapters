@@ -34,6 +34,7 @@ import org.openstack4j.model.network.Port;
 import org.openstack4j.model.network.Subnet;
 import org.openstack4j.openstack.OSFactory;
 
+import com.sap.lvm.CloudClientException;
 import com.sap.lvm.util.MiscUtil;
 
 
@@ -182,7 +183,7 @@ public class OpenStack_CloudController {
 	 * Gets all servers , currently only 1 region is supported so region param is ignored
 	 * 
 	 * @param region
-	 * @return List of openstack servers
+	 * @return List of OpenStack servers
 	 * @throws CloudClientException
 	 */
 	public synchronized List<Server> getInstances(String region)

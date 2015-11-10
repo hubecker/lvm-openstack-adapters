@@ -19,6 +19,7 @@ import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.Server.Status;
 import org.openstack4j.model.image.Image;
 
+import com.sap.lvm.CloudClientException;
 import com.sap.tc.vcm.infrastructure.api.adapter.request.IJavaEeLog;
 import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpSyncResponse;
 import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpResponse.VirtLogMessage;

@@ -230,7 +230,6 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 		logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "retrieveVolumesFromLvmMountConfiguration: mountData:" + request.mountData + " hostnames:" + request.serviceIdToHostname, null);
 		
 		String device;
-		String serviceId;
 		String region;
 		String volumeId;
 		RetrieveVolumesResponse payload = new RetrieveVolumesResponse();
@@ -241,7 +240,7 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 		for (MountData mountData:request.mountData) {
 		   if (!OpenstackConstants.Openstack_VENDOR.equals(mountData.partnerId)) continue;
 		      if (mountData.getStorageType().equals("SAN")) {
-		         serviceId = mountData.serviceId;
+	//	         serviceId = mountData.serviceId;
 		         if (mountData.exportPath == null || !mountData.exportPath.contains(":")) {
 		        	 logger.log(IJavaEeLog.SEVERITY_WARNING, this.getClass().getName(), "retrieveVolumesFromLvmMountConfiguration: missing exportPath for mountPoint:" + mountData.mountPoint, null);
 		     		 continue;
@@ -273,7 +272,7 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 		
 		logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "retrieveVolumesFromLvmMountConfiguration: found volumes:" + payload.retrievedVolumes, null);
 		payload.customCloningProperties = OpenstackAdapterUtil.getVolumeConfigMetaData();
-		StorageOperationResponse response = new StorageOperationResponse(payload);
+		StorageOperationResponse<RetrieveVolumesResponse> response = new StorageOperationResponse<RetrieveVolumesResponse>(payload);
 		response.setPercentCompleted(100);
 		response.setStatus(StorageOperationStatus.COMPLETED);
 		return response;

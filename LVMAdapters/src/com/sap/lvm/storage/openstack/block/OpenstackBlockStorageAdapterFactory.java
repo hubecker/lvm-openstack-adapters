@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.openstack4j.model.storage.block.Volume;
-
-import com.sap.lvm.storage.openstack.util.CloudClientException;
+import com.sap.lvm.CloudClientException;
 import com.sap.lvm.storage.openstack.util.OpenstackConstants;
 import com.sap.nw.lm.aci.engine.api.base.property.IPropertyType.ValueType;
 import com.sap.nw.lm.aci.engine.base.api.i18n.TranslatableString;
@@ -110,7 +108,6 @@ public class OpenstackBlockStorageAdapterFactory implements IStorageManagerAdapt
 
 		TranslatableString key7 = new TranslatableString(OpenstackConstants.PROXY_PASS, DOMAIN_INFRASTRUCTURE, "PROXY_PASS");
 		TranslatableString description7 = new TranslatableString(OpenstackConstants.PROXY_PASS_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_PASS_DESCRIPTION");
-		Volume v;
 		//TENANT
 		ConfigPropMetaData configMetaData1 = new ConfigPropMetaData(key1, ValueType.STRING, description1, true);
 		configMetaDatas.add(configMetaData1);

@@ -10,7 +10,7 @@ import java.util.Map;
 import org.openstack4j.model.storage.file.ShareSnapshot;
 import org.openstack4j.model.storage.file.Share.Status;
 
-import com.sap.lvm.storage.openstack.util.CloudClientException;
+import com.sap.lvm.CloudClientException;
 import com.sap.lvm.storage.openstack.util.OpenstackAdapterUtil;
 import com.sap.lvm.storage.openstack.util.StorageAdapterImplHelper;
 import com.sap.tc.vcm.base.util.serialization.serializable.SerializableClass;

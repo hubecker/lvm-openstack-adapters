@@ -9,7 +9,6 @@ import org.openstack4j.core.transport.Config;
 import org.openstack4j.core.transport.ProxyHost;
 import org.openstack4j.model.compute.ActionResponse;
 import org.openstack4j.model.compute.Server;
-import org.openstack4j.model.compute.VolumeAttachment;
 import org.openstack4j.model.identity.Access;
 import org.openstack4j.model.identity.Access.Service;
 import org.openstack4j.model.storage.block.BlockLimits;
@@ -18,7 +17,7 @@ import org.openstack4j.model.storage.block.VolumeSnapshot;
 import org.openstack4j.model.storage.block.builder.VolumeBuilder;
 import org.openstack4j.openstack.OSFactory;
 
-import com.sap.lvm.storage.openstack.util.CloudClientException;
+import com.sap.lvm.CloudClientException;
 import com.sap.lvm.storage.openstack.util.OpenstackConstants.OpenstackVolumeStates;
 import com.sap.lvm.util.MiscUtil;
 
@@ -149,10 +148,6 @@ public class OpenstackBlockCloudStorageController {
 
 	}
 
-	private synchronized OSClient getClient(String region) {
-		OSClient os = getOs(); //OS not supported for multiple regions at this time
-		return os;
-	}
 
 
 

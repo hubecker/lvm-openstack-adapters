@@ -5,7 +5,7 @@ public class CloudClientException extends Exception {
 	private static final long serialVersionUID = 4553109132767619859L;
 
 	/**
-	 * Contructor for CloudClientException
+	 * Constructor for CloudClientException
 	 * 
 	 * @param message
 	 */
@@ -14,7 +14,7 @@ public class CloudClientException extends Exception {
 	}
 
 	/**
-	 * Contructor for CloudClientException
+	 * Constructor for CloudClientException
 	 * 
 	 * @param t
 	 */
@@ -23,7 +23,7 @@ public class CloudClientException extends Exception {
 	}
 
 	/**
-	 * Contructor for CloudClientException
+	 * Constructor for CloudClientException
 	 * 
 	 * @param message
 	 */

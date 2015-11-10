@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.openstack4j.model.storage.block.VolumeSnapshot;
 
-import com.sap.lvm.storage.openstack.util.CloudClientException;
+import com.sap.lvm.CloudClientException;
 import com.sap.lvm.storage.openstack.util.OpenstackAdapterUtil;
 import com.sap.lvm.storage.openstack.util.StorageAdapterImplHelper;
 
@@ -201,10 +201,10 @@ public class OpenstackBlockStorageSnapshot implements IStorageSnapshot {
 			throws InfrastructAdapterException {
 		logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus: operationId:" + operationId +" snapshots:" +context.snapshots , null);
 		List<StorageLogMessage> logMessages = new ArrayList<StorageLogMessage>();
-	    VolumeSnapshot snapshot = null;
+
 		String snapshotState = null;
 	    String snapshotId = null;
-	    int progress = 0;
+
 	    int operationProgress = 0; 
 	    boolean pending = false;
 	    boolean failed = false;

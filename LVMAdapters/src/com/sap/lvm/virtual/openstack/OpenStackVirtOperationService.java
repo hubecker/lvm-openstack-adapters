@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.openstack4j.model.compute.Server;
 
+import com.sap.lvm.CloudClientException;
 import com.sap.lvm.virtual.openstack.OpenStackConstants.OpenStackCloneSteps;
 import com.sap.lvm.virtual.openstack.OpenStackConstants.OpenStackInstanceStates;
 import com.sap.nw.lm.aci.engine.api.base.property.IProperty;

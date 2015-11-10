@@ -4,6 +4,7 @@ package com.sap.lvm.virtual.openstack;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sap.lvm.CloudClientException;
 import com.sap.tc.vcm.infrastructure.api.adapter.request.IJavaEeLog;
 import com.sap.tc.vcm.virtualization.adapter.api.base.IVirtOpContext;
 import com.sap.tc.vcm.virtualization.adapter.api.base.IVirtOpResponsePayload;

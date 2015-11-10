@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
+
 
 import org.openstack4j.model.compute.ActionResponse;
 import org.openstack4j.model.compute.Server;
@@ -15,7 +15,7 @@ import org.openstack4j.model.storage.block.Volume;
 import org.openstack4j.model.storage.block.VolumeSnapshot;
 import org.openstack4j.model.storage.block.Volume.Status;
 
-import com.sap.lvm.storage.openstack.util.CloudClientException;
+import com.sap.lvm.CloudClientException;
 import com.sap.lvm.storage.openstack.util.OpenstackAdapterUtil;
 import com.sap.lvm.storage.openstack.util.OpenstackConstants;
 import com.sap.lvm.storage.openstack.util.StorageAdapterImplHelper;
@@ -106,7 +106,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 		logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "cloneVolumes: request:" + prepareRequest, null);
 		String operationId = OpenstackAdapterUtil.generateOperationId();
 		ArrayList<String> snapshots  = new ArrayList<String>();
-		String[] keys = {OpenstackConstants.TARGET_VOLUME_TAG, OpenstackConstants.CLONE_OPERATION_TAG};
+	
 		String[] values = new String[2];
 		values[1] = operationId;
 		String region = null;
@@ -511,7 +511,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    int operationProgress = 0; 
 	    boolean pending = false;
 	    boolean failed = false;
-	    boolean snapshotsReady = true;
+	//    boolean snapshotsReady = true;
 	    
 	    //STEP 1 : Check sourceSnapshot State
 		for (OpenstackBlockCloneVolumeStatus status:context.volumeStatus) {
@@ -535,7 +535,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	    		   progress = Integer.parseInt(percent); 
 	    		   if (progress < operationProgress) operationProgress = progress;
 	    		   pending = true;
-	    		   snapshotsReady = false;
+	    //		   snapshotsReady = false;
 	    		   continue;
 	    	   } else if  (snapshotState.name().equals("AVAILABLE")) { 
 	    		  status.sourceSnapshotComplete = true;
@@ -582,7 +582,7 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 			    		   progress = Integer.parseInt(percent); 
 			    		   if (progress < operationProgress) operationProgress = progress;
 			    		   pending = true;
-			    		   snapshotsReady = false;
+//			    		   snapshotsReady = false;
 			    		   continue;
 			    	   } else if (snapshotState.equals("completed")) { 
 			    		  status.targetSnapshotComplete = true;
@@ -718,7 +718,6 @@ public class OpenstackBlockStorageCloning implements IStorageCloning {
 	private void createTargetVolume(OpenstackBlockCloneVolumesContext context, OpenstackBlockCloneVolumeStatus status, boolean source) throws  CloudClientException {
 		  String snapshotId;
 		  if (source) {
-			  //snapshotId = status.volumeToBeCloned.sourceVolumeId; TODO: why does AWS do it this way? wrong value is passed here
 			  snapshotId=status.sourceSnapshotId;
 		  } else {
 			  snapshotId = status.volumeToBeCloned.targetVolumeId;

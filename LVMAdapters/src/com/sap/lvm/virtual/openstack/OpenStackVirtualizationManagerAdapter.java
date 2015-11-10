@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 //import com.sap.nw.lm.aci.engine.base.api.util.AcSystemPropUtil;
+import com.sap.lvm.CloudClientException;
 import com.sap.tc.vcm.infrastructure.api.adapter.request.IJavaEeLog;
 import com.sap.tc.vcm.virtualization.adapter.api.IVirtualizationManagerAdapter;
 import com.sap.tc.vcm.virtualization.adapter.api.config.IVirtManagerAdapterConfig;

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.sap.lvm.storage.openstack.block.OpenstackBlockStorageCloning.OpenstackBlockCloneVolumesContext;
 import com.sap.lvm.storage.openstack.block.OpenstackBlockStorageSnapshot.OpenstackBlockSnapshotVolumesContext;
-import com.sap.lvm.storage.openstack.util.CloudClientException;
+import com.sap.lvm.CloudClientException;
 import com.sap.lvm.storage.openstack.util.OpenstackConstants;
 import com.sap.tc.vcm.infrastructure.api.adapter.InfrastructAdapterException;
 import com.sap.tc.vcm.storage.adapter.api.AbstractStorageManagerAdapter;
