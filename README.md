@@ -95,7 +95,7 @@ mvn  eclipse:eclipse
 
 Then import the external projects under File->Import Existing projects into workspace and then navigate to the lvm-openstack-adapters directory
 
-Note: You may need to manually set your M2_REPO variable in the eclipse Java Build path view for the LVMAdapters project (in Windows this is typically in c:\users\<username>\.m2) 
+Note: You may need to manually set your M2_REPO variable in the eclipse Java Build path view for the LVMAdapters project (in Windows this is typically in c:\users\\\<username>\\.m2\repository) 
 
 ##Other maven commands
 You can use maven to generate the javadocs by excuting: 
