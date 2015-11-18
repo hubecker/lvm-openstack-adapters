@@ -151,9 +151,9 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 		for (StorageVolumeDetails volumeDetails:request.maskingProperties.keySet()) {
 			masking = request.maskingProperties.get(volumeDetails);
 			if (masking.sourcePhysicalHostnames != null && masking.sourcePhysicalHostnames.size() > 0) {
-				if (masking.targetPhysicalHostnames != null && masking.targetPhysicalHostnames.size() == 1) {
+				if (masking.targetPhysicalHostnames != null) {
 					//if source and target physical hostnames are the same ( block volume can be only attached to 1 instance at a time) no need to detach/re-attach 
-					if (masking.sourcePhysicalHostnames.get(0).equals(masking.targetPhysicalHostnames.get(0))) {
+					if (sameSourceAndTargetHost(masking)) {
 						try {
 							volume = openstackClient.getVolume(volumeDetails.storageVolume.storageVolumeId);
 							if (volume == null) {
@@ -211,12 +211,9 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 			}
 
 			//attach volumes to given target hosts
-			if (masking.targetPhysicalHostnames != null && masking.targetPhysicalHostnames.size() == 1) {
+			if (masking.targetPhysicalHostnames != null) {
 				try {
-					if (masking.sourcePhysicalHostnames != null && masking.sourcePhysicalHostnames.size() == 1) {
-						//if target and source host is the same then no need to re-attach
-						if (masking.sourcePhysicalHostnames.get(0).equals(masking.targetPhysicalHostnames.get(0))) continue;
-					}
+					if (sameSourceAndTargetHost(masking)) continue;
 					instanceId = masking.hostProperties.get(masking.targetPhysicalHostnames.get(0)).getProperty(MaskingProperties.PROP_KEY_VIRTUAL_RESOURCE_ID);
 					mounts = request.volumes.get(volumeDetails);
 					if (mounts == null || mounts.isEmpty()) {
@@ -302,5 +299,21 @@ public class OpenstackBlockStorageMappingAndMasking implements IStorageMappingAn
 		response.setStatus(StorageOperationStatus.COMPLETED);
 		return response;
 	}
+	
+	private boolean sameSourceAndTargetHost(MaskingProperties masking) {
+		if (masking != null && masking.sourcePhysicalHostnames != null) {
+			  //if target and source host is the same then no need to re-attach
+			  for(String source:masking.sourcePhysicalHostnames){
+					for (String target:masking.targetPhysicalHostnames) {
+						if (source.equals(target)) {
+							return true;
+						}
+					}
+			  }
+		  }
+	      return false;
+	}
 
 }
+
+
