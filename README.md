@@ -10,7 +10,8 @@ The OpenStack adapters, StorageManager  and Virtualization Manager, compile to a
 
 
 Here are the instructions for downloading, compiling and deploying the LVM Openstack Virtualization and Storage adapters. 
-(note: rather than go through the build steps below, users can deploy the  precompiled .ear file in https://github.com/SAP/lvm-openstack-adapters/blob/master/LVMAdaptersApp/target/LVMAdaptersApp-1.0.ear)
+
+note: rather than go through the build steps below, users can deploy the  precompiled .ear file in https://github.com/SAP/lvm-openstack-adapters/blob/master/LVMAdaptersApp/target/LVMAdaptersApp-1.0.ear
 
 Github repo is https://github.com/SAP/lvm-openstack-adapters
 It’s currently private so only members can see it. Send me your github username  (create one if you don’t have one!) and I will give you permissions.
