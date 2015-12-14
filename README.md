@@ -1,6 +1,6 @@
 ## How is it done?
 
-This OpenStack virtualization adapter and storage adapter that connects SAP LVM to OpenStack works similarly to other LVM adapters, the main difference being that this one is open source with Apache License Version 2.0. We use Apache Maven (https://maven.apache.org/) to build the war files and package them into the deployable ear file. We used the OpenStack4j (http://openstack4j.com/) library to interact with the OpenStack server web services. These dependencies will be automatically downloaded from maven repository during the build process.  
+This OpenStack virtualization adapter and storage adapter that connects SAP LVM to OpenStack works similarly to other SAP LVM adapters, the main difference being that this one is open source with Apache License Version 2.0. We use Apache Maven (https://maven.apache.org/) to build the war files and package them into the deployable ear file. We used the OpenStack4j (http://openstack4j.com/) library to interact with the OpenStack server web services. These dependencies will be automatically downloaded from maven repository during the build process.  
 
 
 ##Building, installing and using the adapters
