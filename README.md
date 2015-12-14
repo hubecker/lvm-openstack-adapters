@@ -1,6 +1,6 @@
 ## How is it done?
 
-This OpenStack virtualization adapter and storage adapter that connects LVM to OpenStack works similarly to other LVM adapters, the main difference being that this one is open source with Apache License Version 2.0. We use Apache Maven (https://maven.apache.org/) to build the war files and package them into the deployable ear file. We used the OpenStack4j (http://openstack4j.com/) library to interact with the OpenStack server web services. These dependencies will be automatically downloaded from maven repository during the build process.  
+This OpenStack virtualization adapter and storage adapter that connects SAP LVM to OpenStack works similarly to other LVM adapters, the main difference being that this one is open source with Apache License Version 2.0. We use Apache Maven (https://maven.apache.org/) to build the war files and package them into the deployable ear file. We used the OpenStack4j (http://openstack4j.com/) library to interact with the OpenStack server web services. These dependencies will be automatically downloaded from maven repository during the build process.  
 
 
 ##Building, installing and using the adapters
@@ -9,14 +9,11 @@ This OpenStack virtualization adapter and storage adapter that connects LVM to O
 The OpenStack adapters, StorageManager  and Virtualization Manager, compile to a war file and are packaged into a single deployable ear file.
 
 
-Here are the instructions for downloading, compiling and deploying the LVM Openstack Virtualization and Storage adapters. 
+Here are the instructions for downloading, compiling and deploying the SAP LVM Openstack Virtualization and Storage adapters. 
 
 note: rather than go through the build steps below, users can deploy the  precompiled .ear file in https://github.com/SAP/lvm-openstack-adapters/blob/master/LVMAdaptersApp/target/LVMAdaptersApp-1.0.ear
 
-Github repo is https://github.com/SAP/lvm-openstack-adapters
-It’s currently private so only members can see it. Send me your github username  (create one if you don’t have one!) and I will give you permissions.
-
-You need git client installed locally to clone the project, I’ve tested with: git version 1.9.5.msysgit.1
+You need git client installed locally to clone the project, Iâ€™ve tested with: git version 1.9.5.msysgit.1
 
 Steps to build and deploy:
 
@@ -44,7 +41,7 @@ The EAR file can de deployed either via the IDE, or using the Telnet commands.
 
 
 In case you want to deploy it using Telnet, these are the steps you must follow:
-  0. Copy the File you need to deploy to the LVM machine and then deploy it via Telnet: 
+  0. Copy the File you need to deploy to the SAP LVM machine and then deploy it via Telnet: 
   1.  Open a Telnet connection to the AS Java on which you want to deploy the application. On Windows, you can do this from a DOS prompt with the command:
 telnet localhost <port>,
 where <port> is the Telnet port of your server. For example, if your server installation is c:\usr\sap\<some_three_letter_SID>\JCxx\..., then your Telnet port should be 5xx08.
@@ -65,7 +62,7 @@ For more information on telnet deploy see: http://help.sap.com/saphelp_banking50
 
 
 ###Configure and Use
-Now you should see the OpenStack adapters in LVM. The configuration procedure is similar to other adapters:
+Now you should see the OpenStack adapters in SAP LVM. The configuration procedure is similar to other adapters:
   1.  navigate to Infrastructure->Virtualization Managers 
   2.  select add 
   3.  choose Openstack
