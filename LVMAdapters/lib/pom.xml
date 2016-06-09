@@ -65,6 +65,22 @@
 							<file>sap.com.tc.vcm.storage.adapter.app.StorageAPI.jar</file>
 						</configuration>
 					</execution>
+					
+					<execution>
+						<id>baseAPI</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>sap.com.tc.vcm.base.app.defLib</artifactId>
+							<version>${project.version}</version>
+							<packaging>${project.packaging}</packaging>
+								<generatePom>true</generatePom>
+							<file>sap.com.tc.vcm.base.app.defLib.jar</file>
+						</configuration>
+					</execution>
 
 					<execution>
 						<id>Manilla</id>

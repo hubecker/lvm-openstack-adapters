@@ -214,7 +214,8 @@ public class OpenStackVirtOperationService implements IVirtOperationService, IVi
 					List<String> networkIDList = new ArrayList<String>();
 					networkIDList.add(networkID);
 					if (propertiesMap.containsKey(OpenStackConstants.ADDITIONAL_NETWORK_IDS)) {
-						String additionalNetworksString = propertiesMap.get(OpenStackConstants.ADDITIONAL_NETWORK_IDS).getSimpleProperty().getStringValue();
+						if (propertiesMap.get(OpenStackConstants.ADDITIONAL_NETWORK_IDS).getSimpleProperty()!=null)
+						{		String additionalNetworksString = propertiesMap.get(OpenStackConstants.ADDITIONAL_NETWORK_IDS).getSimpleProperty().getStringValue();
 						String[] addNetworksArray = additionalNetworksString.split(",");
 						for (String addNetwork : addNetworksArray) {
 							addNetwork = addNetwork.trim();
@@ -225,7 +226,7 @@ public class OpenStackVirtOperationService implements IVirtOperationService, IVi
 									networkIDList.add(addNetwork);
 								}
 							}
-							
+						}
 						}
 					}
 					String securityGroup = propertiesMap.get("SecurityGroup").getSimpleProperty().getStringValue();
@@ -638,8 +639,8 @@ public class OpenStackVirtOperationService implements IVirtOperationService, IVi
 				instanceState = osClient.getInstanceState(entityId);
 			}
 		} catch (CloudClientException e) {
-			logger.log(logger.SEVERITY_INFO,"Could not get status for "+entityId, instanceState, null);
 			instanceState = OpenStackInstanceStates.pending.name();
+			logger.log(logger.SEVERITY_INFO,"Could not get status for "+entityId, instanceState, null);
 
 		}
 		if (instanceState.equalsIgnoreCase(OpenStackConstants.OpenStackInstanceStates.pending.name()) || instanceState.equalsIgnoreCase(OpenStackConstants.OpenStackInstanceStates.stopping.name())|| instanceState.equalsIgnoreCase(OpenStackConstants.OpenStackInstanceStates.build.name()) || instanceState.equals("QUEUED") || instanceState.equals("SAVING")) {

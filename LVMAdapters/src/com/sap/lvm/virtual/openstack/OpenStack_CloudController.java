@@ -324,6 +324,9 @@ public class OpenStack_CloudController {
 	public synchronized String getImageState(String imageID)
 	throws CloudClientException {
 		Image image = getOs().images().get(imageID);
+		if (image==null)
+			throw new CloudClientException("Cannot get status of image:"+imageID);
+		
 		org.openstack4j.model.image.Image.Status status = image.getStatus();
 		return status.name();
 	}

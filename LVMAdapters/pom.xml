@@ -45,6 +45,12 @@
 			<artifactId>openstack4j-core-2.0.4-SNAPSHOT_with_Manila</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		
+			<dependency>
+			<groupId>com.sap.vcm</groupId>
+			<artifactId>sap.com.tc.vcm.base.app.defLib</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -57,17 +63,17 @@
 		<dependency>
 			<groupId>org.pacesys</groupId>
 			<artifactId>openstack4j-core</artifactId>
-			<version>2.0.4</version>
+			<version>2.20</version>
 		</dependency>
 		<dependency>
 			<groupId>org.pacesys.openstack4j.connectors</groupId>
 			<artifactId>openstack4j-httpclient</artifactId>
-			<version>2.0.4</version>
+			<version>2.20</version>
 		</dependency>
 		<dependency>
 			<groupId>org.pacesys.openstack4j.connectors</groupId>
 			<artifactId>openstack4j-jersey2-jdk16</artifactId>
-			<version>2.0.4</version>
+			<version>2.20</version>
 		</dependency>
 
 	</dependencies>
@@ -173,3 +179,4 @@
 	</build>
 
 </project>
+
