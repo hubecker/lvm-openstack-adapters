@@ -24,6 +24,7 @@ import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStorageSystemsRequest;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStorageSystemsResponse;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStorageVolumesRequest;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStorageVolumesResponse;
+import com.sap.tc.vcm.storage.adapter.api.retrieval.IStorageRetrieval;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.IStorageRetrievalExt;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.RetrieveVolumesRequest;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.RetrieveVolumesResponse;
@@ -35,7 +36,7 @@ import com.sap.tc.vcm.storage.adapter.api.types.StorageVolumeDetails;
 
 
 
-public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
+public class OpenstackBlockStorageRetrieval implements IStorageRetrieval {
 	
 	private OpenstackBlockCloudStorageController openstackClient = null;
 	private String accountId;
