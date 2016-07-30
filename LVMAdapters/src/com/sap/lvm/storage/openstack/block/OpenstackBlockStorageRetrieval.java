@@ -25,7 +25,6 @@ import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStorageSystemsResponse;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStorageVolumesRequest;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStorageVolumesResponse;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.IStorageRetrieval;
-import com.sap.tc.vcm.storage.adapter.api.retrieval.IStorageRetrievalExt;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.RetrieveVolumesRequest;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.RetrieveVolumesResponse;
 import com.sap.tc.vcm.storage.adapter.api.types.MountData;
@@ -285,7 +284,7 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrieval {
 			GetDeviceVolumeMappingResponse payload = new GetDeviceVolumeMappingResponse();
 			Map<String,MountData> volumeMapping = new HashMap<String,MountData>();
 			String region = null;
-			String instID = request.get(IStorageRetrievalExt.INSTANCEID);
+			String instID = request.get("instanceid");
 			if (isValidInstanceIDFormat(instID)==false)
 				return null;
 			List<Volume> volumeList = new ArrayList<Volume>();
