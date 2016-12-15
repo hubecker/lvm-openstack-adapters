@@ -4,23 +4,22 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.openstack4j.model.compute.Server;
+import org.openstack4j.model.manila.Share;
+import org.openstack4j.model.manila.ShareSnapshot;
 import org.openstack4j.model.storage.block.Volume;
 import org.openstack4j.model.storage.block.VolumeSnapshot;
-import org.openstack4j.model.storage.file.Share;
-import org.openstack4j.model.storage.file.ShareSnapshot;
 
 import com.sap.tc.vcm.infrastructure.api.adapter.IInfrastructAdapter.ExternalURL;
 import com.sap.tc.vcm.infrastructure.api.adapter.config.ConfigPropMetaData;
 import com.sap.tc.vcm.storage.adapter.api.types.StoragePool;
+import com.sap.tc.vcm.storage.adapter.api.types.StoragePool.StoragePoolType;
 import com.sap.tc.vcm.storage.adapter.api.types.StorageSnapshotVolume;
 import com.sap.tc.vcm.storage.adapter.api.types.StorageSystem;
 import com.sap.tc.vcm.storage.adapter.api.types.StorageVolume;
-import com.sap.tc.vcm.storage.adapter.api.types.StoragePool.StoragePoolType;
 import com.sap.tc.vcm.storage.adapter.api.types.StorageVolume.VolumeType;
 
 public class OpenstackAdapterUtil {
@@ -119,10 +118,6 @@ public class OpenstackAdapterUtil {
 //		internalSnapshot.storagePoolId = region+':'+OpenstackConstants.Openstack_POOL_SNAPSHOTS;
 		internalSnapshot.storagePoolId = "";
 		internalSnapshot.storageSystemId = storageSystemId;
-		Calendar c = Calendar.getInstance();
-		Date created = snap.getCreated();
-		c.setTime(created);
-		internalSnapshot.snapshotTimestamp = c.getTimeInMillis();
 		internalSnapshot.synchronizedFromVolumeId = snap.getShareId();
 		return internalSnapshot;
 	}

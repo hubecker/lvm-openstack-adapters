@@ -4,7 +4,7 @@
 	<groupId>com.sap.vcm</groupId>
 	<artifactId>LVMAdaptersApp</artifactId>
 	<packaging>ear</packaging>
-	<version>1.0</version>
+	<version>1.2</version>
 	<name>LVMAdaptersApp</name>
 	<description>Builds SAP ear file for LVM Adapters for Openstack </description>
 	<properties>
@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>com.sap.vcm</groupId>
 			<artifactId>LVMAdapters</artifactId>
-			<version>1.0.0</version>
+			<version>1.2</version>
 			<type>war</type>
 		</dependency>
 
@@ -47,7 +47,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/LVMAdaptersApp-1.0
+							<outputDirectory>${basedir}/target/LVMAdaptersApp-1.2
 							</outputDirectory>
 							<resources>
 								<resource>
@@ -71,8 +71,6 @@
 							<groupId>com.sap.vcm</groupId>
 							<artifactId>LVMAdapters</artifactId>
 						</webModule>
-
-
 					</modules>
 					<version>5</version>
 				</configuration>
@@ -94,7 +92,7 @@
 							<artifactId>LVMAdaptersApp</artifactId>
 							<version>${project.version}</version>
 							<packaging>ear</packaging>
-							<file>target/LVMAdaptersApp-1.0.ear</file>
+							<file>target/LVMAdaptersApp-1.2.ear</file>
 						</configuration>
 					</execution>
 				</executions>

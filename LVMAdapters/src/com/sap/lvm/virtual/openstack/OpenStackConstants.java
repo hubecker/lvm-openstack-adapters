@@ -28,7 +28,7 @@ public class OpenStackConstants {
 	
 
 	public static final String OpenStack_VENDOR = "Openstack";
-	public static final String OpenStack_VERSION = "1.0";
+	public static final String OpenStack_VERSION = "1.2";
 	public static final String OpenStack_FACTORY_ID = OpenStackConstants.OpenStack_VENDOR + " " + OpenStackConstants.OpenStack_VERSION;
 	public static final String OpenStack_VIRTUALIZATION_ADAPTER = "OpenStack";
 	public static final String OpenStack_CLOUD = "OpenStack Cloud";

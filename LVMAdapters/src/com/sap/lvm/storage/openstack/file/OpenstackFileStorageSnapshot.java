@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.openstack4j.model.storage.file.ShareSnapshot;
-import org.openstack4j.model.storage.file.Share.Status;
+import org.openstack4j.model.manila.ShareSnapshot;
+import org.openstack4j.model.manila.ShareSnapshot.Status;
 
 import com.sap.lvm.CloudClientException;
 import com.sap.lvm.storage.openstack.util.OpenstackAdapterUtil;

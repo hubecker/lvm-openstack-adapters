@@ -82,23 +82,29 @@ public class OpenstackFileStorageAdapterFactory implements IStorageManagerAdapte
 
 		List<ConfigPropMetaData> configMetaDatas = new ArrayList<ConfigPropMetaData>();
 		
-		TranslatableString key1 = new TranslatableString(OpenstackConstants.TENANT, DOMAIN_INFRASTRUCTURE, "TENANT");
-		TranslatableString description1 = new TranslatableString(OpenstackConstants.TENANT_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "TENANT_DESCRIPTION");
+		TranslatableString key1 = new TranslatableString(OpenstackConstants.OS_TENANT, DOMAIN_INFRASTRUCTURE, "OS_TENANT");
+		TranslatableString description1 = new TranslatableString(OpenstackConstants.OS_TENANT_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "OS_TENANT_DESCRIPTION");
 
-		TranslatableString key2 = new TranslatableString(OpenstackConstants.REGION, DOMAIN_INFRASTRUCTURE, "REGION");
-		TranslatableString description2 = new TranslatableString(OpenstackConstants.REGION, DOMAIN_INFRASTRUCTURE, "REGION");
+		TranslatableString key2 = new TranslatableString(OpenstackConstants.OS_REGION, DOMAIN_INFRASTRUCTURE, "OS_REGION");
+		TranslatableString description2 = new TranslatableString(OpenstackConstants.OS_REGION_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "OS_REGION_DESCRIPTION");
 		
-		TranslatableString key4 = new TranslatableString(OpenstackConstants.PROXY_HOST, DOMAIN_INFRASTRUCTURE, "PROXY_HOST");
-		TranslatableString description4 = new TranslatableString(OpenstackConstants.PROXY_HOST_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_HOST_DESCRIPTION");
+		TranslatableString key3 = new TranslatableString(OpenstackConstants.OS_DOMAIN, DOMAIN_INFRASTRUCTURE, "OS_DOMAIN");
+		TranslatableString description3 = new TranslatableString(OpenstackConstants.OS_DOMAIN_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "OS_DOMAIN_DESCRIPTION");
 		
-		TranslatableString key5 = new TranslatableString(OpenstackConstants.PROXY_PORT, DOMAIN_INFRASTRUCTURE, "PROXY_PORT");
-		TranslatableString description5 = new TranslatableString(OpenstackConstants.PROXY_PORT_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_PORT_DESCRIPTION");
+		TranslatableString key4 = new TranslatableString(OpenstackConstants.OS_PROJECT, DOMAIN_INFRASTRUCTURE, "OS_PROJECT");
+		TranslatableString description4 = new TranslatableString(OpenstackConstants.OS_PROJECT_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "OS_PROJECT_DESCRIPTION");
 		
-		TranslatableString key6 = new TranslatableString(OpenstackConstants.PROXY_USER_NAME, DOMAIN_INFRASTRUCTURE, "PROXY_USER_NAME");
-		TranslatableString description6 = new TranslatableString(OpenstackConstants.PROXY_USER_NAME_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_USER_NAME_DESCRIPTION");
+		TranslatableString key5 = new TranslatableString(OpenstackConstants.PROXY_HOST, DOMAIN_INFRASTRUCTURE, "PROXY_HOST");
+		TranslatableString description5 = new TranslatableString(OpenstackConstants.PROXY_HOST_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_HOST_DESCRIPTION");
 		
-		TranslatableString key7 = new TranslatableString(OpenstackConstants.PROXY_PASS, DOMAIN_INFRASTRUCTURE, "PROXY_PASS");
-		TranslatableString description7 = new TranslatableString(OpenstackConstants.PROXY_PASS_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_PASS_DESCRIPTION");
+		TranslatableString key6 = new TranslatableString(OpenstackConstants.PROXY_PORT, DOMAIN_INFRASTRUCTURE, "PROXY_PORT");
+		TranslatableString description6 = new TranslatableString(OpenstackConstants.PROXY_PORT_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_PORT_DESCRIPTION");
+		
+		TranslatableString key7 = new TranslatableString(OpenstackConstants.PROXY_USER_NAME, DOMAIN_INFRASTRUCTURE, "PROXY_USER_NAME");
+		TranslatableString description7 = new TranslatableString(OpenstackConstants.PROXY_USER_NAME_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_USER_NAME_DESCRIPTION");
+		
+		TranslatableString key8 = new TranslatableString(OpenstackConstants.PROXY_PASS, DOMAIN_INFRASTRUCTURE, "PROXY_PASS");
+		TranslatableString description8 = new TranslatableString(OpenstackConstants.PROXY_PASS_DESCRIPTION, DOMAIN_INFRASTRUCTURE, "PROXY_PASS_DESCRIPTION");
 		
 		//tenant
 		ConfigPropMetaData configMetaData1 = new ConfigPropMetaData(key1, ValueType.STRING, description1, true);
@@ -108,22 +114,29 @@ public class OpenstackFileStorageAdapterFactory implements IStorageManagerAdapte
 		ConfigPropMetaData configMetaData2 = new ConfigPropMetaData(key2, ValueType.STRING, description2, true);
 		configMetaDatas.add(configMetaData2);
 
-		
-		//proxy host
-		ConfigPropMetaData configMetaData4 = new ConfigPropMetaData(key4, ValueType.STRING, description4, false, false, true);
+		//DOMAIN
+		ConfigPropMetaData configMetaData3 = new ConfigPropMetaData(key3, ValueType.STRING, description3, true);
+		configMetaDatas.add(configMetaData3);
+
+		//PROJECT
+		ConfigPropMetaData configMetaData4 = new ConfigPropMetaData(key4, ValueType.STRING, description4, true);
 		configMetaDatas.add(configMetaData4);
-		
-		//proxy port
-		ConfigPropMetaData configMetaData5 = new ConfigPropMetaData(key5, ValueType.STRING, description5);
+
+		//proxy host
+		ConfigPropMetaData configMetaData5 = new ConfigPropMetaData(key5, ValueType.STRING, description5, false, false, true);
 		configMetaDatas.add(configMetaData5);
 		
-		//proxy user
+		//proxy port
 		ConfigPropMetaData configMetaData6 = new ConfigPropMetaData(key6, ValueType.STRING, description6);
 		configMetaDatas.add(configMetaData6);
 		
-		//proxy pass
-		ConfigPropMetaData configMetaData7 = new ConfigPropMetaData(key7, ValueType.STRING, description7, false, true);
+		//proxy user
+		ConfigPropMetaData configMetaData7 = new ConfigPropMetaData(key7, ValueType.STRING, description7);
 		configMetaDatas.add(configMetaData7);
+		
+		//proxy pass
+		ConfigPropMetaData configMetaData8 = new ConfigPropMetaData(key8, ValueType.STRING, description8, false, true);
+		configMetaDatas.add(configMetaData8);
 
 		adapterConfigData.setUrlRequired(ConfigRequirement.Required);
 		adapterConfigData.setUserRequired(ConfigRequirement.Required); 
@@ -165,12 +178,13 @@ public class OpenstackFileStorageAdapterFactory implements IStorageManagerAdapte
 		Map<String, String> connectionProps = config.getStorageManagerAdditionalConfigProps();
 		Map<String, String> secProps = config.getStorageManagerAdditionalSecConfigProps();
 		try {
-			OpenstackFileCloudStorageController controller = new OpenstackFileCloudStorageController(config.getLabel(),config.getUrl(),  connectionProps.get(OpenstackConstants.REGION),
-					config.getUser(),config.getPassword(), connectionProps.get(OpenstackConstants.TENANT),connectionProps.get(OpenstackConstants.PROXY_HOST), 
-					connectionProps.get(OpenstackConstants.PROXY_PORT), connectionProps.get(OpenstackConstants.PROXY_USER_NAME), 
-					secProps.get(OpenstackConstants.PROXY_PASS));//,config.getLogger());
+			OpenstackFileCloudStorageController controller = new OpenstackFileCloudStorageController(config.getLabel(),config.getUrl(),config.getUser(),config.getPassword(), 
+					connectionProps.get(OpenstackConstants.OS_REGION),connectionProps.get(OpenstackConstants.OS_TENANT),
+					connectionProps.get(OpenstackConstants.OS_DOMAIN),connectionProps.get(OpenstackConstants.OS_PROJECT),
+					connectionProps.get(OpenstackConstants.PROXY_HOST),connectionProps.get(OpenstackConstants.PROXY_PORT),
+					connectionProps.get(OpenstackConstants.PROXY_USER_NAME),secProps.get(OpenstackConstants.PROXY_PASS));
 
-			controller.getRegions();
+			controller.listBackends();
 		} catch (CloudClientException e) {
 			config.getLogger().traceThrowable(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "testConnection:" + e.getMessage(), null,e);
 			throw new InfrastructAdapterException(e.getMessage());

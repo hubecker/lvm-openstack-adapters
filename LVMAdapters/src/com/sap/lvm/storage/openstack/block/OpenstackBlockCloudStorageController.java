@@ -7,26 +7,31 @@ import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient;
 import org.openstack4j.core.transport.Config;
 import org.openstack4j.core.transport.ProxyHost;
-import org.openstack4j.model.compute.ActionResponse;
+import org.openstack4j.model.common.ActionResponse;
+import org.openstack4j.model.common.Identifier;
+import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.identity.Access;
+import org.openstack4j.model.identity.ServiceEndpoint;
 import org.openstack4j.model.identity.Access.Service;
 import org.openstack4j.model.storage.block.BlockLimits;
 import org.openstack4j.model.storage.block.Volume;
 import org.openstack4j.model.storage.block.VolumeSnapshot;
 import org.openstack4j.model.storage.block.builder.VolumeBuilder;
 import org.openstack4j.openstack.OSFactory;
+import org.openstack4j.openstack.storage.block.domain.AvailabilityZone;
 
 import com.sap.lvm.CloudClientException;
 import com.sap.lvm.storage.openstack.util.OpenstackConstants.OpenstackVolumeStates;
 import com.sap.lvm.util.MiscUtil;
 
-
-
-
 public class OpenstackBlockCloudStorageController {
+	public boolean v3;
 	OSClient os;
 	private String region = "default";
+	private String domain = "default";
+	private String project = "defaultproject";
+
 	String accessKey;
 	String secretKey;
 	String endpoint;
@@ -41,53 +46,84 @@ public class OpenstackBlockCloudStorageController {
 //	private String proxyPassword; // not supported 
 //	private String proxyUsername; // not supported 
 
-	public OpenstackBlockCloudStorageController 
-	(String accountId,String endpoint, String region,
-			String username, String password, String tenant, String proxyHost,
-			String proxyPort, String proxyUsername, String proxyPassword) throws CloudClientException {
+ 	public OpenstackBlockCloudStorageController (
+			String accountId,String endpoint, String username, String password, 
+			String region, String tenant,  
+			String domain, String project,  
+			String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) throws CloudClientException {
+
 		try{
+			
 			this.region = region;
 			this.accountId=accountId;
 			if (endpoint != null)
 				this.endpoint = endpoint;
-
 			if (username != null)
 				this.username = username;
-
 			if (password != null)
 				this.password = password;
+
 			if (tenant != null)
 				this.tenant = tenant;
+			if (domain != null)
+				this.domain = domain;
+			if (project != null)
+				this.project = project;
+
 			if (proxyHost != null)
 				this.proxyHost = proxyHost;
 			if (proxyHost != null)
 				this.proxyHost = proxyHost;
 			if (proxyPort != null)
 				this.proxyPort = proxyPort;
-			if (tenant != null)
-				this.tenant = tenant;
 
-			if (MiscUtil.notNullAndEmpty(proxyHost) && (proxyPort!=null))
-			{	int proxyPortint=Integer.parseInt(proxyPort);
-			this.proxyPortint=proxyPortint;
-			//can be used for testing proxy ; will set global proxy for all adapters
-			//			System.setProperty("https.proxySet", "true");
-			//			System.setProperty("https.proxyHost",this.proxyHost);
-			//			System.setProperty("https.proxyPort", this.proxyPort);
-			os =
+			v3 = this.endpoint.endsWith("/v3/");
+			
+			if (MiscUtil.notNullAndEmpty(proxyHost) && (proxyPort!=null))	{
+				int proxyPortint=Integer.parseInt(proxyPort);
+				this.proxyPortint=proxyPortint;
 
-				OSFactory.builder().endpoint(this.endpoint).credentials(username,
-						password).tenantName(tenant).withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
-						.authenticate();
-			}
-			else
-				os =
+				if (v3) {
 
-					OSFactory.builder().endpoint(this.endpoint).credentials(username,
-							password).tenantName(tenant).withConfig(Config.newConfig())
+					Identifier domainIdentifier = Identifier.byName(domain);
+					Identifier projectIdentifier = Identifier.byName(project);
+
+					os = OSFactory.builderV3()
+							.endpoint(this.endpoint)
+							.credentials(username, password, domainIdentifier)
+							.withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+							.scopeToProject(projectIdentifier, domainIdentifier)
 							.authenticate();
 
+				} else {
+					os = OSFactory.builder()
+							.endpoint(this.endpoint)
+							.credentials(username,password)
+							.tenantName(tenant)
+							.withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+							.authenticate();
+				}
+			}
+			else
+				if (v3) {
+					Identifier domainIdentifier = Identifier.byName(domain);
+					Identifier projectIdentifier = Identifier.byName(project);
 
+					os = OSFactory.builderV3()
+							.endpoint(this.endpoint)
+							.credentials(username, password, domainIdentifier)
+							.withConfig(Config.newConfig())
+							.scopeToProject(projectIdentifier, domainIdentifier)
+							.authenticate();
+				} else {
+					os = OSFactory.builder()
+							.endpoint(this.endpoint)
+							.credentials(username,password)
+							.tenantName(tenant)
+							.withConfig(Config.newConfig())
+							.authenticate();
+
+				}
 		} catch (RuntimeException e) {
 			throw new CloudClientException("Failed to get Openstack client",e);
 		}
@@ -129,7 +165,6 @@ public class OpenstackBlockCloudStorageController {
 		return snapshot;
 	}
 
-
 	public synchronized VolumeSnapshot createSnapshot(String volumeId, String description, boolean force) throws CloudClientException {
 
 		volumeId = getOpenstackId(volumeId);
@@ -148,33 +183,81 @@ public class OpenstackBlockCloudStorageController {
 
 	}
 
-
-
-
 	public OSClient getOs() {
-
-		if (MiscUtil.notNullAndEmpty(this.proxyHost) && (this.proxyPort!=null))
-		{			
-
-			//	System.setProperty("https.proxySet", "true");
-			//	System.setProperty("https.proxyHost",this.proxyHost);
-			//	System.setProperty("https.proxyPort", this.proxyPort);
-			os =
-
-				OSFactory.builder().endpoint(this.endpoint).credentials(username,
-						this.password).tenantName(this.tenant).withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
-						.authenticate();
+		OSClient os = null;
+		if (v3) {
+			os = getOs3(); //OS not supported for multiple regions at this time
+		} else {
+			os = getOs2(); //OS not supported for multiple regions at this time
 		}
-		else
-			os = OSFactory.builder().endpoint(this.endpoint).credentials(
-					this.username, this.password).tenantName(this.tenant)
-					.withConfig(Config.newConfig()).authenticate();
 		return os;
 	}
 
-	
+	public OSClient getOs2() {
 
-	public synchronized List<String> getRegions() throws CloudClientException {
+		if (MiscUtil.notNullAndEmpty(this.proxyHost) && (this.proxyPort!=null))	{			
+			os = OSFactory.builder()
+					.endpoint(this.endpoint)
+					.credentials(username,this.password)
+					.tenantName(this.tenant).withConfig(Config.newConfig()
+					.withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+					.authenticate();
+		} else {
+			os = OSFactory.builder()
+					.endpoint(this.endpoint)
+					.credentials(this.username, this.password).tenantName(this.tenant)
+					.withConfig(Config.newConfig()).authenticate();
+		}
+
+		return os;
+	}
+
+	public OSClient getOs3() {
+
+		Identifier domainIdentifier = Identifier.byName(domain);
+		Identifier projectIdentifier = Identifier.byName(project);
+
+		if (MiscUtil.notNullAndEmpty(this.proxyHost) && (this.proxyPort!=null))
+		{	
+			os = OSFactory.builderV3()
+				.endpoint(this.endpoint)
+				.credentials(username, password, domainIdentifier)
+				.withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+				.scopeToProject(projectIdentifier, domainIdentifier)
+				.authenticate();
+
+		}
+		else
+			os = OSFactory.builderV3()
+				.endpoint(this.endpoint)
+				.credentials(username, password, domainIdentifier)
+				.withConfig(Config.newConfig())
+				.scopeToProject(projectIdentifier, domainIdentifier)
+				.authenticate();
+
+		return os;
+	}
+
+	/**
+	 * Get list of possible "T-shirt" sizes (CPU/disk/RAM) for new VMs during provisioning
+	 * @return list of flavors a.k.a. t-shirt sizes
+	 * @throws CloudClientException
+	 */
+	public synchronized List<? extends Flavor> getFlavors()
+			throws CloudClientException {
+		List<? extends Flavor> flavors;
+		OSClient os = getOs();
+		try {
+			flavors = os.compute().flavors().list();
+
+		} catch (RuntimeException e) {
+
+			throw new CloudClientException("Failed to get OpenStack flavors ",e);
+		}
+		return flavors;
+	}
+
+	public synchronized List<String> getRegionsold() throws CloudClientException {
 		List<String> regions = new ArrayList<String>();
 
 		OSClient os=getOs();
@@ -184,6 +267,25 @@ public class OpenstackBlockCloudStorageController {
 		//this just grabs the first region of the first resource ; should make more general solution
 		String region = cat.get(0).getEndpoints().get(0).getRegion();
 
+
+		regions.add(region);
+
+
+		if (regions.size() < 1)
+			regions.add(this.region);
+		return regions;
+	}
+
+	public synchronized List<String> getRegions() throws CloudClientException {
+		List<String> regions = new ArrayList<String>();
+
+		OSClient os=getOs();
+
+		List<? extends ServiceEndpoint> services = os.identity().services().listEndpoints();
+		Access access = os.getAccess();
+		List<? extends Service> cat = (access.getServiceCatalog());//
+		//this just grabs the first region of the first resource ; should make more general solution
+		String region = services.get(0).getRegion();
 
 		regions.add(region);
 
@@ -217,6 +319,20 @@ public class OpenstackBlockCloudStorageController {
 		return zoneNames;
 	}
 
+	
+	public List<String> getAvailabilityZones() {
+	OSClient os=getOs();
+		ArrayList<String> zones=new ArrayList<String>();
+		List<? extends AvailabilityZone> availabilityZones = os.blockStorage().zones().list();
+		if (availabilityZones.size()>0)
+		for (AvailabilityZone availabilityZone : availabilityZones) {
+			zones.add(availabilityZone.getZoneName());
+		}
+		else
+			zones.add("nova")	;
+		return zones;
+	}
+	
 	public String getRegion(String poolId) {
 
 		return this.region;

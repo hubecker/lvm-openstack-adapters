@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.openstack4j.model.storage.file.Share;
-import org.openstack4j.model.storage.file.ShareAccessMapping;
-import org.openstack4j.model.storage.file.ShareSnapshot;
-import org.openstack4j.model.storage.file.Share.Status;
+import org.openstack4j.model.manila.Access;
+import org.openstack4j.model.manila.Share;
+import org.openstack4j.model.manila.ShareSnapshot;
+import org.openstack4j.model.manila.Share.Status;
 
 import com.sap.lvm.CloudClientException;
 import com.sap.lvm.storage.openstack.util.OpenstackAdapterUtil;
@@ -373,7 +373,7 @@ public class OpenstackFileStorageCloning implements IStorageCloning {
 		
 		logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getOperationStatus: operationId: " + operationId + " context: " + context, null);
 		List<StorageLogMessage> logMessages = new ArrayList<StorageLogMessage>();
-		Status snapshotState = null;
+		org.openstack4j.model.manila.ShareSnapshot.Status snapshotState = null;
 		Share share = null;
 		Status shareState = null;
 	    String snapshotId = null;
@@ -564,9 +564,9 @@ public class OpenstackFileStorageCloning implements IStorageCloning {
 	    		targetVolumeId = state.volumeToBeCloned.targetVolumeId;
 
 	    		Share sourceShare = openstackClient.getShare(sourceVolumeId);
-	    		String sourceExport = sourceShare.getExport();
+	    		String sourceExport = sourceShare.getExportLocation();
 	    		Share targetShare = openstackClient.getShare(targetVolumeId);
-	    		String targetExport = targetShare.getExport();
+	    		String targetExport = targetShare.getExportLocation();
 
 	    		List<MountData> sourceMnts = state.volumeToBeCloned.sourceMountConfiguration;
 	    		if(sourceMnts!=null && !sourceMnts.isEmpty()) 
@@ -586,8 +586,8 @@ public class OpenstackFileStorageCloning implements IStorageCloning {
 
 
 	    		try {
-	    			List<? extends ShareAccessMapping> listAccess = openstackClient.listAccess(sourceVolumeId);
-	    			for (ShareAccessMapping shareAccessMapping : listAccess) {
+   					List<? extends Access> listAccess = openstackClient.listAccess(sourceVolumeId);
+	    			for (Access shareAccessMapping : listAccess) {
 	    				String accessTo = shareAccessMapping.getAccessTo();
 	    				Boolean active = openstackClient.allowAccess(targetVolumeId, accessTo);
 	    			}

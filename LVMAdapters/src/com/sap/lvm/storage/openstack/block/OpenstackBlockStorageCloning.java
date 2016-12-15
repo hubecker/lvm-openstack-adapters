@@ -8,22 +8,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
-import org.openstack4j.model.compute.ActionResponse;
+import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.storage.block.Volume;
-import org.openstack4j.model.storage.block.VolumeSnapshot;
 import org.openstack4j.model.storage.block.Volume.Status;
+import org.openstack4j.model.storage.block.VolumeSnapshot;
 
 import com.sap.lvm.CloudClientException;
 import com.sap.lvm.storage.openstack.util.OpenstackAdapterUtil;
-import com.sap.lvm.storage.openstack.util.OpenstackConstants;
-import com.sap.lvm.storage.openstack.util.StorageAdapterImplHelper;
-
 import com.sap.lvm.storage.openstack.util.OpenstackConstants.OpenstackVolumeStates;
+import com.sap.lvm.storage.openstack.util.StorageAdapterImplHelper;
 import com.sap.nw.lm.aci.engine.api.base.property.IProperty;
-
-
 import com.sap.tc.vcm.base.util.serialization.serializable.SerializableClass;
 import com.sap.tc.vcm.base.util.serialization.serializable.SerializableField;
 import com.sap.tc.vcm.infrastructure.api.adapter.InfrastructAdapterException;
@@ -37,12 +32,17 @@ import com.sap.tc.vcm.storage.adapter.api.cloning.CloneVolumesRequest;
 import com.sap.tc.vcm.storage.adapter.api.cloning.CloneVolumesResponse;
 import com.sap.tc.vcm.storage.adapter.api.cloning.CloningCharacteristicsRequest;
 import com.sap.tc.vcm.storage.adapter.api.cloning.CloningCharacteristicsResponse;
+import com.sap.tc.vcm.storage.adapter.api.cloning.CloningCharacteristicsResponse.CloneMethodDuration;
+import com.sap.tc.vcm.storage.adapter.api.cloning.CloningCharacteristicsResponse.OperationAttributes;
+import com.sap.tc.vcm.storage.adapter.api.cloning.CloningCharacteristicsResponse.StoragePoolSelection;
+import com.sap.tc.vcm.storage.adapter.api.cloning.CloningCharacteristicsResponse.SupportedStorageOperation;
 import com.sap.tc.vcm.storage.adapter.api.cloning.CloningValidationResponse;
 import com.sap.tc.vcm.storage.adapter.api.cloning.DeleteVolumesRequest;
 import com.sap.tc.vcm.storage.adapter.api.cloning.DeleteVolumesResponse;
 import com.sap.tc.vcm.storage.adapter.api.cloning.FinalizeCloneVolumesRequest;
 import com.sap.tc.vcm.storage.adapter.api.cloning.FinalizeCloneVolumesResponse;
 import com.sap.tc.vcm.storage.adapter.api.cloning.GenerateUniqueIdsRequest;
+import com.sap.tc.vcm.storage.adapter.api.cloning.GenerateUniqueIdsRequest.UniqueId;
 import com.sap.tc.vcm.storage.adapter.api.cloning.GenerateUniqueIdsResponse;
 import com.sap.tc.vcm.storage.adapter.api.cloning.IStorageCloning;
 import com.sap.tc.vcm.storage.adapter.api.cloning.PostProcessCloneVolumesRequest;
@@ -55,11 +55,6 @@ import com.sap.tc.vcm.storage.adapter.api.cloning.RetrieveAvailableTargetSystems
 import com.sap.tc.vcm.storage.adapter.api.cloning.RetrieveAvailableTargetSystemsResponse;
 import com.sap.tc.vcm.storage.adapter.api.cloning.RetrieveAvailableTargetVolumesRequest;
 import com.sap.tc.vcm.storage.adapter.api.cloning.RetrieveAvailableTargetVolumesResponse;
-import com.sap.tc.vcm.storage.adapter.api.cloning.CloningCharacteristicsResponse.CloneMethodDuration;
-import com.sap.tc.vcm.storage.adapter.api.cloning.CloningCharacteristicsResponse.OperationAttributes;
-import com.sap.tc.vcm.storage.adapter.api.cloning.CloningCharacteristicsResponse.StoragePoolSelection;
-import com.sap.tc.vcm.storage.adapter.api.cloning.CloningCharacteristicsResponse.SupportedStorageOperation;
-import com.sap.tc.vcm.storage.adapter.api.cloning.GenerateUniqueIdsRequest.UniqueId;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStoragePoolsRequest;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStoragePoolsResponse;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStorageSystemsRequest;

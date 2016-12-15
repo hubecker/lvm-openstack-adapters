@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.openstack4j.model.storage.file.Share;
+import org.openstack4j.model.manila.Share;
 
 import com.sap.lvm.storage.openstack.util.OpenstackAdapterUtil;
 import com.sap.lvm.storage.openstack.util.OpenstackConstants;

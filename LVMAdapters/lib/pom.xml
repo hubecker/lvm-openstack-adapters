@@ -1,19 +1,17 @@
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>com.sap.vcm</groupId>
 	<artifactId>VirtualizationAPIs</artifactId>
-	<version>1.0.0</version>
+	<version>1.2</version>
 
 	<description>
   		Required for compilation of LVM virtualization adapters
-  	</description>
+ 	</description>
 
 	<properties>
-	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 	</properties>
 	
 	<reporting>
@@ -22,13 +20,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
         <version>2.8.1</version>
-  
       </plugin>
-     
     </plugins>
   </reporting>
 
-	<build> 
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -47,9 +43,10 @@
 							<version>${project.version}</version>
 							<packaging>jar</packaging>
 								<generatePom>true</generatePom>
-							<file>sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI-1.0.0.jar</file>
+							<file>sap.com.tc.vcm.virtual.adapter.app.VirtualizationAPI.jar</file>
 						</configuration>
 					</execution>
+
 					<execution>
 						<id>StorageAPI</id>
 						<phase>initialize</phase>
@@ -65,10 +62,24 @@
 							<file>sap.com.tc.vcm.storage.adapter.app.StorageAPI.jar</file>
 						</configuration>
 					</execution>
-					
-				
 
-					<execution>
+ 					<execution>
+						<id>InfrastructureAPI</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>sap.com.tc.vcm.base.app.InfrastructureAPI</artifactId>
+							<version>${project.version}</version>
+							<packaging>${project.packaging}</packaging>
+								<generatePom>true</generatePom>
+							<file>sap.com.tc.vcm.base.app.InfrastructureAPI.jar</file>
+						</configuration>
+					</execution>
+          
+          <execution>
 						<id>Manilla</id>
 						<phase>initialize</phase>
 						<goals>
@@ -76,18 +87,15 @@
 						</goals>
 						<configuration>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>openstack4j-core-2.0.4-SNAPSHOT_with_Manila</artifactId>
-							<version>${project.version}</version>
+							<artifactId>openstack4j-core</artifactId>
+							<version>2.21-SNAPSHOT</version>
 							<packaging>${project.packaging}</packaging>
 							<generatePom>true</generatePom>
-							<file>openstack4j-core-2.0.4-SNAPSHOT_with_Manila.jar</file>
+							<file>openstack4j-core-2.0.0.jar</file>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-	
 		</plugins>
-
-
 	</build>
 </project>

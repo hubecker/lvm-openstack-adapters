@@ -5,16 +5,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openstack4j.model.compute.ActionResponse;
+import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.storage.block.Volume;
 import org.openstack4j.model.storage.block.Volume.Status;
 
 import com.sap.lvm.CloudClientException;
-import com.sap.lvm.storage.openstack.util.StorageAdapterImplHelper;
 import com.sap.lvm.storage.openstack.util.OpenstackConstants.OpenstackAttachmentStatus;
 import com.sap.lvm.storage.openstack.util.OpenstackConstants.OpenstackVolumeStates;
-
-
+import com.sap.lvm.storage.openstack.util.StorageAdapterImplHelper;
 import com.sap.tc.vcm.infrastructure.api.adapter.request.IJavaEeLog;
 import com.sap.tc.vcm.storage.adapter.api.base.response.StorageOperationResponse;
 import com.sap.tc.vcm.storage.adapter.api.base.response.StorageOperationResponse.StorageLogMessage;

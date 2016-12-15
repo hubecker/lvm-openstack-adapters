@@ -1,10 +1,6 @@
 package com.sap.lvm.virtual.openstack;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
- 
 
 import com.sap.tc.vcm.base.util.serialization.serializable.SerializableClass;
 import com.sap.tc.vcm.base.util.serialization.serializable.SerializableField;

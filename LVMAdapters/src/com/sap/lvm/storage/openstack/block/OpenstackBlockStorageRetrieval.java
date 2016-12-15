@@ -25,7 +25,6 @@ import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStorageSystemsResponse;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStorageVolumesRequest;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.GetStorageVolumesResponse;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.IStorageRetrieval;
-import com.sap.tc.vcm.storage.adapter.api.retrieval.IStorageRetrievalExt;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.RetrieveVolumesRequest;
 import com.sap.tc.vcm.storage.adapter.api.retrieval.RetrieveVolumesResponse;
 import com.sap.tc.vcm.storage.adapter.api.types.MountData;
@@ -36,7 +35,7 @@ import com.sap.tc.vcm.storage.adapter.api.types.StorageVolumeDetails;
 
 
 
-public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
+public class OpenstackBlockStorageRetrieval implements IStorageRetrieval {
 	
 	private OpenstackBlockCloudStorageController openstackClient = null;
 	private String accountId;
@@ -127,12 +126,12 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 		ArrayList<StorageSystem> systemList = new ArrayList<StorageSystem>();
 		if (requestedSystems == null||requestedSystems.isEmpty()) {
 			List<String> regions = openstackClient.getRegions();
-			logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getStorageSystems: regions:" + regions , null);
-			for (String region:regions) {
+			logger.log(IJavaEeLog.SEVERITY_DEBUG, this.getClass().getName(), "getStorageSystems: zones:" + regions , null);
+			for (String region : regions) {
 		  	  systemList.add(OpenstackAdapterUtil.createStorageSystem(region,accountId));
 			}
 		} else {
-			List<String> regions = openstackClient.getRegions();
+			List<String> zones = openstackClient.getAvailabilityZones();
 			boolean found = false;
 			for (int i = 0;i<requestedSystems.size();i++) {
 			  if(requestedSystems.get(i) == null) {
@@ -140,9 +139,9 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 				  continue;
 			  }
 		      found = false;
-			  for(String region:regions) {
-			     if (requestedSystems.get(i).equals(accountId+':'+region)) {
-		    	    systemList.add(OpenstackAdapterUtil.createStorageSystem(region, accountId));
+			  for(String zone : zones) {
+			     if (requestedSystems.get(i).equals(accountId+':'+zone)) {
+		    	    systemList.add(OpenstackAdapterUtil.createStorageSystem(zone, accountId));
 		    	    found = true;
 		    	    break;
 		         }
@@ -284,7 +283,7 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 		try {
 			GetDeviceVolumeMappingResponse payload = new GetDeviceVolumeMappingResponse();
 			Map<String,MountData> volumeMapping = new HashMap<String,MountData>();
-			String region = null;
+			String zone = null;
 			String instID = request.get("instanceid");
 			if (isValidInstanceIDFormat(instID)==false)
 				return null;
@@ -292,15 +291,15 @@ public class OpenstackBlockStorageRetrieval implements IStorageRetrievalExt {
 	    	//for (String zone:openstackClient.listAvailabilityZones(null)) {
 	    		volumeList.addAll(openstackClient.listVolumes(null));
 	    	//}
-	    	List<String> regions = openstackClient.getRegions();
+	    	List<String> zones = openstackClient.getAvailabilityZones();
 	    	// assuming a single region support
-	    	if (regions != null)
-	    		region = regions.get(0);
+	    	if (zones != null)
+	    		zone = zones.get(0);
 	    	for (Volume vol:volumeList) {
 	    		for (VolumeAttachment va : vol.getAttachments()) {
 	    			if (va.getServerId()!= null && va.getServerId().equals(instID)) {
 	    				 MountData mt = new MountData();
-	  				     mt.setRemotePath(region + ":" + vol.getId() + ":" + va.getDevice());
+	  				     mt.setRemotePath(zone + ":" + vol.getId() + ":" + va.getDevice());
 	  				     mt.setVendor(OpenstackConstants.Openstack_VENDOR);
 	  				     mt.setFsType(MountData.STORAGE_TYPE_DFS);
 	  				     volumeMapping.put(va.getDevice(), mt);

@@ -11,27 +11,38 @@ import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient;
 import org.openstack4j.core.transport.Config;
 import org.openstack4j.core.transport.ProxyHost;
-import org.openstack4j.model.compute.ActionResponse;
+import org.openstack4j.model.common.ActionResponse;
+import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.compute.ext.AvailabilityZone;
-import org.openstack4j.model.identity.Access;
 import org.openstack4j.model.identity.Access.Service;
-import org.openstack4j.model.storage.file.Share;
-import org.openstack4j.model.storage.file.ShareAccessMapping;
-import org.openstack4j.model.storage.file.SharePool;
-import org.openstack4j.model.storage.file.ShareSnapshot;
-import org.openstack4j.model.storage.file.Share.Status;
+import org.openstack4j.model.manila.Access;
+import org.openstack4j.model.manila.Access.Level;
+import org.openstack4j.model.manila.Access.State;
+import org.openstack4j.model.manila.Access.Type;
+import org.openstack4j.model.manila.Share;
+import org.openstack4j.model.manila.Share.Status;
+import org.openstack4j.model.manila.ShareCreate;
+import org.openstack4j.model.manila.ShareSnapshot;
+import org.openstack4j.model.manila.ShareSnapshotCreate;
+import org.openstack4j.model.manila.actions.AccessOptions;
 import org.openstack4j.openstack.OSFactory;
 
-import com.sap.lvm.util.MiscUtil;
 import com.sap.lvm.CloudClientException;
+import com.sap.lvm.util.MiscUtil;
+
 
 
 public class OpenstackFileCloudStorageController {
 
+	public boolean v3 = true;
+	
 	static OSClient os;
-	private String defaultregion = "default";
-	private String defaultbackend = "defaultbackend";
-	private String defaultpool = "defaultpool";
+
+	private String region = "Default";
+	private String domain = "Default";
+	private String project = "Default";
+	private String backend = "Default";
+	private String pool = "Default";
 	String accessKey;
 	String secretKey;
 	String endpoint;
@@ -43,52 +54,86 @@ public class OpenstackFileCloudStorageController {
 	private String proxyHost;
 	private int proxyPortint;
 	private String proxyPort;
-	private String proxyPassword; //TODO: not supported in Openstack4j, remove from UI
-	private String proxyUsername; //TODO: not supported in Openstack4j, remove from UI
+//	private String proxyPassword; 
+//	private String proxyUsername; 
 
-	//	private HttpProxyDataImpl httpProxy;
-
-	public OpenstackFileCloudStorageController 
-	(String accountId,String endpoint, String region,
-			String username, String password, String tenant, String proxyHost,
-			String proxyPort, String proxyUsername, String proxyPassword) throws CloudClientException {
+	public OpenstackFileCloudStorageController (
+			String accountId,String endpoint, String username, String password, 
+			String region, String tenant,
+      String domain, String project, 
+			String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) throws CloudClientException {
 
 		try{
-			this.defaultregion = region;
+			this.region = region;
 			this.accountId=accountId;
 			if (endpoint != null)
 				this.endpoint = endpoint;
-
 			if (username != null)
 				this.username = username;
-
 			if (password != null)
 				this.password = password;
+
 			if (tenant != null)
 				this.tenant = tenant;
+			if (domain != null)
+				this.domain = domain;
+			if (project != null)
+				this.project = project;
+
 			if (proxyHost != null)
 				this.proxyHost = proxyHost;
 			if (proxyHost != null)
 				this.proxyHost = proxyHost;
 			if (proxyPort != null)
 				this.proxyPort = proxyPort;
-			if (tenant != null)
-				this.tenant = tenant;
 
-			if (MiscUtil.notNullAndEmpty(proxyHost) && (proxyPort!=null))
-			{	int proxyPortint=Integer.parseInt(proxyPort);
-			this.proxyPortint=proxyPortint;
-			//			System.setProperty("https.proxySet", "true");
-			//			System.setProperty("https.proxyHost",this.proxyHost);
-			//			System.setProperty("https.proxyPort", this.proxyPort);
-			os = OSFactory.builder().endpoint(this.endpoint).credentials(username,
-						password).tenantName(tenant).withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
-						.authenticate();
+			v3 = this.endpoint.endsWith("/v3/");
+			
+			if (MiscUtil.notNullAndEmpty(proxyHost) && (proxyPort!=null))	{
+				int proxyPortint=Integer.parseInt(proxyPort);
+				this.proxyPortint=proxyPortint;
+
+				if (v3) {
+
+					Identifier domainIdentifier = Identifier.byName(domain);
+					Identifier projectIdentifier = Identifier.byName(project);
+
+					os = OSFactory.builderV3()
+							.endpoint(this.endpoint)
+							.credentials(username, password, domainIdentifier)
+							.withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+							.scopeToProject(projectIdentifier, domainIdentifier)
+							.authenticate();
+
+				} else {
+					os = OSFactory.builder()
+							.endpoint(this.endpoint)
+							.credentials(username,password)
+							.tenantName(tenant)
+							.withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+							.authenticate();
+				}
 			}
 			else
-				os = OSFactory.builder().endpoint(this.endpoint).credentials(username,
-							password).tenantName(tenant).withConfig(Config.newConfig())
+				if (v3) {
+					Identifier domainIdentifier = Identifier.byName(domain);
+					Identifier projectIdentifier = Identifier.byName(project);
+
+					os = OSFactory.builderV3()
+							.endpoint(this.endpoint)
+							.credentials(username, password, domainIdentifier)
+							.withConfig(Config.newConfig())
+							.scopeToProject(projectIdentifier, domainIdentifier)
 							.authenticate();
+				} else {
+					os = OSFactory.builder()
+							.endpoint(this.endpoint)
+							.credentials(username,password)
+							.tenantName(tenant)
+							.withConfig(Config.newConfig())
+							.authenticate();
+
+				}
 		} catch (RuntimeException e) {
 			throw new CloudClientException("Failed to get Openstack client",e);
 		}
@@ -105,8 +150,8 @@ public class OpenstackFileCloudStorageController {
 		if (shareType==null)
 			shareType="general";
 
-		Share builder = Builders.share().name("Cloned Share").description(description).snapshot(snapshotId).zone(availabilityZone).build();
-		Share share = os.fileStorage().shares().create(builder);
+		ShareCreate builder = Builders.share().name("Cloned Share").description(description).snapshotId(snapshotId).availabilityZone(availabilityZone).build();
+		Share share = os.share().shares().create(builder);
 
 		return share;
 	}
@@ -114,49 +159,86 @@ public class OpenstackFileCloudStorageController {
 	public synchronized ShareSnapshot createShareSnapshot(String shareId, String name, String description) throws CloudClientException {
 		OSClient os=getOs();
 		shareId = getOpenstackId(shareId);
-		ShareSnapshot builder = Builders.shareSnapshot().name(name).description(description).share(shareId).build();
-		ShareSnapshot snap = os.fileStorage().snapshots().create(builder);
+		ShareSnapshotCreate builder = Builders.shareSnapshot().name(name).description(description).shareId(shareId).build();
+		ShareSnapshot snap = os.share().shareSnapshots().create(builder);
 		return snap;
 	}
 
-	private synchronized OSClient getClient(String region) {
-		OSClient os = getOs(); //OS not supported for multiple regions at this time
+	public OSClient getOs() {
+		OSClient os = null;
+		if (v3) {
+			os = getOs3(); //OS not supported for multiple regions at this time
+		} else {
+			os = getOs2(); //OS not supported for multiple regions at this time
+		}
 		return os;
 	}
 
-	public OSClient getOs() {
+	public OSClient getOs2() {
+
+		if (MiscUtil.notNullAndEmpty(this.proxyHost) && (this.proxyPort!=null))	{			
+			os = OSFactory.builder()
+					.endpoint(this.endpoint)
+					.credentials(username,this.password)
+					.tenantName(this.tenant).withConfig(Config.newConfig()
+					.withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+					.authenticate();
+		} else {
+			os = OSFactory.builder()
+					.endpoint(this.endpoint)
+					.credentials(this.username, this.password).tenantName(this.tenant)
+					.withConfig(Config.newConfig()).authenticate();
+		}
+
+		return os;
+	}
+
+	public OSClient getOs3() {
+
+		Identifier domainIdentifier = Identifier.byName(domain);
+		Identifier projectIdentifier = Identifier.byName(project);
 
 		if (MiscUtil.notNullAndEmpty(this.proxyHost) && (this.proxyPort!=null))
-		{			
+		{	
+			os = OSFactory.builderV3()
+				.endpoint(this.endpoint)
+				.credentials(username, password, domainIdentifier)
+				.withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+				.scopeToProject(projectIdentifier, domainIdentifier)
+				.authenticate();
 
-			//	System.setProperty("https.proxySet", "true");
-			//	System.setProperty("https.proxyHost",this.proxyHost);
-			//	System.setProperty("https.proxyPort", this.proxyPort);
-			os = OSFactory.builder().endpoint(this.endpoint).credentials(username,
-						this.password).tenantName(this.tenant).withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
-						.authenticate();
 		}
 		else
-			os = OSFactory.builder().endpoint(this.endpoint).credentials(
-					this.username, this.password).tenantName(this.tenant)
-					.withConfig(Config.newConfig()).authenticate();
+			os = OSFactory.builderV3()
+				.endpoint(this.endpoint)
+				.credentials(username, password, domainIdentifier)
+				.withConfig(Config.newConfig())
+				.scopeToProject(projectIdentifier, domainIdentifier)
+				.authenticate();
+
 		return os;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<String> listBackends() {
 		OSClient os=getOs();
 		Set<String> backends = new HashSet();		
-		List<? extends SharePool> sharePools = os.fileStorage().schedulerStats().listPools();
-		if (sharePools.size()>0)
-			for (SharePool sharePool : sharePools) {
-				backends.add(sharePool.getBackend());
+		List<? extends Share> shares = os.share().shares().listDetails();
+		if (shares.size()>0)
+			for (Share share : shares) {
+				String shareHost = share.getHost();
+				String spId = shareHost.split("@")[1];
+				String backend = spId.split("#")[0];
+				if (MiscUtil.notNullAndEmpty(backend)) {
+					backends.add(backend);
+				}
 			}
 		else
-			backends.add(defaultbackend);
+			backends.add(pool);
+
 		return new ArrayList<String>(backends);
 	}	
-
+	
 	public String getAccountId() {
 		return this.accountId; 
 	}
@@ -172,37 +254,40 @@ public class OpenstackFileCloudStorageController {
 		OSClient os=getOs();
 		shareId = getOpenstackId(shareId);
 		shareId = shareId.trim();
-		Share share = os.fileStorage().shares().get(shareId);
+		Share share = os.share().shares().get(shareId);
 		String spId = share.getHost().split("@")[1];
 		String backend = spId.split("#")[0];
 
 		return backend; 
 	}
 
-	public List<String> listPools(String backend) {
+	public List<String> listPools (String backend) {
 		OSClient os=getOs();
-		ArrayList<String> sPools=new ArrayList<String>();
-		List<? extends SharePool> sharePools = os.fileStorage().schedulerStats().listPools();
-		if (sharePools.size()>0)
-			for (SharePool sharePool : sharePools) {
+		ArrayList<String> pools=new ArrayList<String>();
+		List<? extends Share> shares = os.share().shares().listDetails();
+		if (shares.size()>0)
+			for (Share share : shares) {
+				String shareHost = share.getHost();
+				String spId = shareHost.split("@")[1];
+				String shareBackend = spId.split("#")[0];
+				String sharePool = spId.split("#")[1];
 				if (MiscUtil.notNullAndEmpty(backend)) {
-					String spId = sharePool.getBackend();
-					if (MiscUtil.equals(spId, backend)) {
-						sPools.add(sharePool.getPool());
+					if (MiscUtil.equals(shareBackend, backend)) {
+						pools.add(sharePool);
 					}
 				} else {
-					sPools.add(sharePool.getPool());
+					pools.add(sharePool);
 				}
 			}
 		else
-			sPools.add(defaultpool);
-		return sPools;
+			pools.add(pool);
+		return pools;
 	}
-
+	
 	public String getPool(String shareId) {
 		OSClient os=getOs();
 		shareId = getOpenstackId(shareId);
-		Share share = os.fileStorage().shares().get(shareId);
+		Share share = os.share().shares().get(shareId);
 		String spId = share.getHost().split("@")[1];
 		String pool = spId.split("#")[1];
 
@@ -210,7 +295,7 @@ public class OpenstackFileCloudStorageController {
 	}
 
 	public String getRegion(String poolId) {
-		return this.defaultregion;
+		return this.region;
 	}
 
 	public List<Share> listShares(String storagePoolId) {
@@ -218,7 +303,7 @@ public class OpenstackFileCloudStorageController {
 		OSClient os=getOs();
 		List<Share> listShares = new ArrayList<Share>();
 		
-		List<? extends Share> shares = os.fileStorage().shares().list();
+		List<? extends Share> shares = os.share().shares().listDetails();
 		for (Share share : shares) {
 			if (MiscUtil.notNullAndEmpty(storagePoolId)) {
 				String spId = share.getHost().split("@")[1];
@@ -233,18 +318,18 @@ public class OpenstackFileCloudStorageController {
 		return listShares;
 	}
 
-	public List<? extends ShareAccessMapping> listAccess(String shareId) {
+	public List<? extends Access> listAccess(String shareId) {
 		OSClient os=getOs();
 		shareId = getOpenstackId(shareId);		
-		List<? extends ShareAccessMapping> accessList = os.fileStorage().shares().access().list(shareId);
+		List<? extends Access> accessList = os.share().shares().listAccess(shareId);
 		return accessList;
 	}
 
-	public ShareAccessMapping getAccess(String shareId, String shareAccessId) {
+	public Access getAccess(String shareId, String shareAccessId) {
 		OSClient os=getOs();
 		shareId = getOpenstackId(shareId);		
-		List<? extends ShareAccessMapping> accessList = os.fileStorage().shares().access().list(shareId);
-		for (ShareAccessMapping shareAccessMapping : accessList) {
+		List<? extends Access> accessList = os.share().shares().listAccess(shareId);
+		for (Access shareAccessMapping : accessList) {
 			if (MiscUtil.equals(shareAccessMapping.getId(),shareAccessId)) {
 				return shareAccessMapping;
 			} 
@@ -255,10 +340,15 @@ public class OpenstackFileCloudStorageController {
 	public Boolean allowAccess(String shareId, String accessTo) {
 		OSClient os=getOs();
 		shareId = getOpenstackId(shareId);		
-		ShareAccessMapping resp = os.fileStorage().shares().access().allow(accessTo, "ip", shareId);
+		Level accessLevel = Level.RW ;
+		Type accessType = Type.IP;
+		
+		AccessOptions accessOptions = new AccessOptions(accessLevel, accessType, accessTo);
+		Access resp = os.share().shares().grantAccess(shareId, accessOptions);
 		String shareAccessId = resp.getId();
+		State state = resp.getState();
 		Boolean active = false;
-		while (!MiscUtil.equals(resp.getState(), "active")) {
+		while (!state.equals(State.ACTIVE)) {
 			resp = getAccess(shareId, shareAccessId);
 		}
 		return active;
@@ -267,16 +357,16 @@ public class OpenstackFileCloudStorageController {
 	public Share getShare(String shareId) {
 		OSClient os=getOs();
 		shareId = getOpenstackId(shareId);
-		Share share = os.fileStorage().shares().get(shareId);
+		Share share = os.share().shares().get(shareId);
 		return share;
 	}
 
 	public Share getSharebyExport(String exportlocation) {
 		OSClient os=getOs();
 		exportlocation = exportlocation.trim();
-		List<? extends Share> shares = os.fileStorage().shares().list();
+		List<? extends Share> shares = os.share().shares().list();
 		for (Share share : shares) {
-			if (exportlocation.contains(share.getExport().trim())) {
+			if (exportlocation.contains(share.getExportLocation().trim())) {
 				return share;
 			}
 		}
@@ -285,7 +375,7 @@ public class OpenstackFileCloudStorageController {
 
 	public Share getSharebyName(String shareName) {
 		OSClient os=getOs();
-		List<? extends Share> shares = os.fileStorage().shares().list();
+		List<? extends Share> shares = os.share().shares().list();
 		for (Share share : shares) {
 			if (MiscUtil.equals(share.getName(), shareName)) {
 				return share;
@@ -297,14 +387,14 @@ public class OpenstackFileCloudStorageController {
 	public Status getShareStatus(String shareId) {
 		OSClient os=getOs();
 		shareId = getOpenstackId(shareId);
-		Status status = os.fileStorage().shares().get(shareId).getStatus();
+		Status status = os.share().shares().get(shareId).getStatus();
 		return status;
 	}
 
 	public void deleteShare(String shareId) throws CloudClientException {
 		OSClient os=getOs();
 		shareId=getOpenstackId(shareId);
-		ActionResponse response = os.fileStorage().shares().delete(shareId);
+		ActionResponse response = os.share().shares().delete(shareId);
 		if (!response.isSuccess())		
 			throw new CloudClientException("Failed to delete Openstack share:"+response.toString());
 	}
@@ -312,7 +402,7 @@ public class OpenstackFileCloudStorageController {
 	public ShareSnapshot getSnapshot(String snapshotId) {
 		OSClient os=getOs();
 		snapshotId = getOpenstackId(snapshotId);
-		ShareSnapshot snap = os.fileStorage().snapshots().get(snapshotId);
+		ShareSnapshot snap = os.share().shareSnapshots().get(snapshotId);
 		return snap;
 	}
 
@@ -322,9 +412,11 @@ public class OpenstackFileCloudStorageController {
 		List<ShareSnapshot> VCMshareSnapshots = new ArrayList<ShareSnapshot>();
 		Map<String, String> filteringParams = new HashMap<String, String>();
 		filteringParams.put("share_id", shareId);
-		List<? extends ShareSnapshot> shareSnapshots = os.fileStorage().snapshots().list(filteringParams);
+		List<? extends ShareSnapshot> shareSnapshots = os.share().shareSnapshots().list();
 		for (ShareSnapshot shareSnapshot : shareSnapshots) {
-			VCMshareSnapshots.add(os.fileStorage().snapshots().get(shareSnapshot.getId()));
+			if (shareSnapshot.getShareId().equals(shareId)) {
+				VCMshareSnapshots.add(os.share().shareSnapshots().get(shareSnapshot.getId()));
+			}
 		}
 		return VCMshareSnapshots;
 	}
@@ -334,28 +426,27 @@ public class OpenstackFileCloudStorageController {
 		ShareSnapshot VCMshareSnapshot = null;
 		Map<String, String> filteringParams = new HashMap<String, String>();
 		filteringParams.put("share_id", shareId);
-		List<? extends ShareSnapshot> shareSnapshots = os.fileStorage().snapshots().list(filteringParams);
-		for (ShareSnapshot shareSnapshot : shareSnapshots) {
-			if (shareSnapshot.getName().contains(sapshotName)) {
-				VCMshareSnapshot = os.fileStorage().snapshots().get(shareSnapshot.getId());
+		List<? extends ShareSnapshot> list = os.share().shareSnapshots().list();
+		for (ShareSnapshot shareSnapshot : list) {
+			if (shareSnapshot.getShareId().equals(shareId) && shareSnapshot.getName().contains(sapshotName)) {
+				VCMshareSnapshot = os.share().shareSnapshots().get(shareSnapshot.getId());
 				break;
 			}
-
 		}
 		return VCMshareSnapshot;
 	}
 
-	public synchronized Status getSnapshotStatus(String snapshotId) throws CloudClientException {
+	public synchronized org.openstack4j.model.manila.ShareSnapshot.Status getSnapshotStatus(String snapshotId) throws CloudClientException {
 		OSClient os=getOs();
 		snapshotId = getOpenstackId(snapshotId);
-		Status status = os.fileStorage().snapshots().get(snapshotId).getStatus();
-		return status;
+		return os.share().shareSnapshots().get(snapshotId).getStatus();
+	
 	}
 
 	public void deleteSnapshot(String snapshotId) throws CloudClientException  {
 		OSClient os=getOs();
 		snapshotId = getOpenstackId(snapshotId);
-		ActionResponse response = os.fileStorage().snapshots().delete(snapshotId);
+		ActionResponse response = os.share().shareSnapshots().delete(snapshotId);
 		if (!response.isSuccess())		
 			throw new CloudClientException("Failed to delete Openstack snapshot:"+response.toString());
 	}
@@ -368,29 +459,30 @@ public class OpenstackFileCloudStorageController {
 	public Share createShareFromSnapshot(String shareName, ShareSnapshot snapshot, String shareType) {
 
 		OSClient os=getOs(); 
-		Share sharePrototype = Builders.share().snapshot(snapshot.getId()).shareType(shareType).name(shareName).size(snapshot.getSize()).protocol(snapshot.getProtocol()).build();
-		Share share = os.fileStorage().shares().create(sharePrototype);
+		ShareCreate sharePrototype = Builders.share().snapshotId(snapshot.getId()).shareType(shareType).name(shareName).size(snapshot.getSize()).shareProto(snapshot.getShareProto()).build();
+		Share share = os.share().shares().create(sharePrototype);
 		return share;
 	}
 
 	public ShareSnapshot createSnapshot(Share share, String snapshotName) {
 
 		OSClient os=getOs(); 
-		ShareSnapshot builder = Builders.shareSnapshot().share(share.getId()).name(snapshotName).build();
-		ShareSnapshot snapshot = os.fileStorage().snapshots().create(builder);
+		ShareSnapshotCreate builder = Builders.shareSnapshot().shareId(share.getId()).name(snapshotName).build();
+		ShareSnapshot snapshot = os.share().shareSnapshots().create(builder);
 		return snapshot;
 	}
 
-	private static ShareAccessMapping allowAccess(OSClient os, String accessTo,String accessType, Share share) {
+	private static Access allowAccess(OSClient os, String accessTo, Type accessType, Share share) {
 
-		ShareAccessMapping accessMapping = os.fileStorage().shares().access().allow(accessTo, accessType, share.getId());
+		AccessOptions AccessOptions = new AccessOptions(Level.RW, accessType, accessTo);
+		Access accessMapping = os.share().shares().grantAccess(share.getId(), AccessOptions);
 		return accessMapping;
 	}
 	public static boolean isCloneAvailable(String cloneShareId) {
 
-		Share cloneShare = os.fileStorage().shares().get(cloneShareId);
+		Share cloneShare = os.share().shares().get(cloneShareId);
 		if (Status.AVAILABLE.equals(cloneShare.getStatus())) {
-			allowAccess(os, "0.0.0.0/0", "ip", cloneShare);
+			allowAccess(os, "0.0.0.0/0", Type.IP, cloneShare);
 			return true;
 		}
 		return false;
@@ -414,8 +506,8 @@ public class OpenstackFileCloudStorageController {
 		List<String> regions = new ArrayList<String>();
 
 		OSClient os=getOs();
+		org.openstack4j.model.identity.Access access = os.getAccess();
 
-		Access access = os.getAccess();
 		List<? extends Service> cat = (access.getServiceCatalog());//
 		//this just grabs the first region of the first resource ; should make more general solution
 		String region = cat.get(0).getEndpoints().get(0).getRegion();
@@ -425,10 +517,9 @@ public class OpenstackFileCloudStorageController {
 
 
 		if (regions.size() < 1)
-			regions.add(this.defaultregion);
+			regions.add(this.region);
 		return regions;
 	}
-
 
 	public List<String> listAvailabilityZones(String region) {
 		OSClient os=getOs();
@@ -444,6 +535,3 @@ public class OpenstackFileCloudStorageController {
 	}
 
 }
-
-
-

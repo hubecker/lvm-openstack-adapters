@@ -14,16 +14,16 @@ import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient;
 import org.openstack4j.core.transport.Config;
 import org.openstack4j.core.transport.ProxyHost;
+import org.openstack4j.model.common.ActionResponse;
+import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.compute.Action;
-import org.openstack4j.model.compute.ActionResponse;
-import org.openstack4j.model.compute.Addresses;
 import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.InterfaceAttachment;
+import org.openstack4j.model.compute.InterfaceAttachment.FixedIp;
 import org.openstack4j.model.compute.SecGroupExtension;
 import org.openstack4j.model.compute.Server;
-import org.openstack4j.model.compute.ServerCreate;
-import org.openstack4j.model.compute.InterfaceAttachment.FixedIp;
 import org.openstack4j.model.compute.Server.Status;
+import org.openstack4j.model.compute.ServerCreate;
 import org.openstack4j.model.compute.builder.ServerCreateBuilder;
 import org.openstack4j.model.compute.ext.AvailabilityZone;
 import org.openstack4j.model.identity.Access;
@@ -44,8 +44,12 @@ import com.sap.lvm.util.MiscUtil;
  */
 
 public class OpenStack_CloudController {
+	public boolean v3;
 	OSClient os;
 	private String region = "default";
+	private String domain = "default";
+	private String project = "defaultproject";
+
 	String accessKey;
 	String secretKey;
 	String endpoint;
@@ -78,51 +82,83 @@ public class OpenStack_CloudController {
 	 * @param proxyPassword
 	 * @throws CloudClientException
 	 */
-	public OpenStack_CloudController(String endpoint, String region,
-			String username, String password, String tenant, String proxyHost,
-			String proxyPort, String proxyUsername, String proxyPassword) throws CloudClientException {
-		try{
-			this.region = region;
+	public OpenStack_CloudController (
+			String endpoint, String username, String password, 
+			String region, String tenant, 
+      String domain, String project, 
+			String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) throws CloudClientException {
 
-			if (endpoint != null)
-				this.endpoint = endpoint;
+				try{
+					
+					this.region = region;
+					if (endpoint != null)
+						this.endpoint = endpoint;
+					if (username != null)
+						this.username = username;
+					if (password != null)
+						this.password = password;
 
-			if (username != null)
-				this.username = username;
+					if (tenant != null)
+						this.tenant = tenant;
+					if (domain != null)
+						this.domain = domain;
+					if (project != null)
+						this.project = project;
 
-			if (password != null)
-				this.password = password;
-			if (tenant != null)
-				this.tenant = tenant;
-			if (proxyHost != null)
-				this.proxyHost = proxyHost;
-			if (proxyHost != null)
-				this.proxyHost = proxyHost;
-			if (proxyPort != null)
-				this.proxyPort = proxyPort;
-			if (tenant != null)
-				this.tenant = tenant;
+					if (proxyHost != null)
+						this.proxyHost = proxyHost;
+					if (proxyHost != null)
+						this.proxyHost = proxyHost;
+					if (proxyPort != null)
+						this.proxyPort = proxyPort;
 
-			if (MiscUtil.notNullAndEmpty(proxyHost) && (proxyPort!=null))
-			{	int proxyPortint=Integer.parseInt(proxyPort);
-			this.proxyPortint=proxyPortint;
-			//			System.setProperty("https.proxySet", "true");
-			//			System.setProperty("https.proxyHost",this.proxyHost);
-			//			System.setProperty("https.proxyPort", this.proxyPort);
-			os =
+			v3 = this.endpoint.endsWith("/v3/");
+			
+			if (MiscUtil.notNullAndEmpty(proxyHost) && (proxyPort!=null))	{
+				int proxyPortint=Integer.parseInt(proxyPort);
+				this.proxyPortint=proxyPortint;
 
-				OSFactory.builder().endpoint(this.endpoint).credentials(username,
-						password).tenantName(tenant).withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
-						.authenticate();
-			}
-			else
-				os =
+				if (v3) {
 
-					OSFactory.builder().endpoint(this.endpoint).credentials(username,
-							password).tenantName(tenant).withConfig(Config.newConfig())
+					Identifier domainIdentifier = Identifier.byName(domain);
+					Identifier projectIdentifier = Identifier.byName(project);
+
+					os = OSFactory.builderV3()
+							.endpoint(this.endpoint)
+							.credentials(username, password, domainIdentifier)
+							.withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+							.scopeToProject(projectIdentifier, domainIdentifier)
 							.authenticate();
 
+				} else {
+					os = OSFactory.builder()
+							.endpoint(this.endpoint)
+							.credentials(username,password)
+							.tenantName(tenant)
+							.withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+							.authenticate();
+				}
+			}
+			else
+				if (v3) {
+					Identifier domainIdentifier = Identifier.byName(domain);
+					Identifier projectIdentifier = Identifier.byName(project);
 
+					os = OSFactory.builderV3()
+							.endpoint(this.endpoint)
+							.credentials(username, password, domainIdentifier)
+							.withConfig(Config.newConfig())
+							.scopeToProject(projectIdentifier, domainIdentifier)
+							.authenticate();
+				} else {
+					os = OSFactory.builder()
+							.endpoint(this.endpoint)
+							.credentials(username,password)
+							.tenantName(tenant)
+							.withConfig(Config.newConfig())
+							.authenticate();
+
+				}
 		} catch (RuntimeException e) {
 			throw new CloudClientException("Failed to get Openstack client",e);
 		}
@@ -135,7 +171,7 @@ public class OpenStack_CloudController {
 	 * @return list of openstack regions
 	 * @throws CloudClientException
 	 */
-	public synchronized List<String> getRegions() throws CloudClientException {
+	public synchronized List<String> getRegionsold() throws CloudClientException {
 		List<String> regions = new ArrayList<String>();
 
 
@@ -324,9 +360,6 @@ public class OpenStack_CloudController {
 	public synchronized String getImageState(String imageID)
 	throws CloudClientException {
 		Image image = getOs().images().get(imageID);
-		if (image==null)
-			throw new CloudClientException("Cannot get status of image:"+imageID);
-		
 		org.openstack4j.model.image.Image.Status status = image.getStatus();
 		return status.name();
 	}
@@ -576,20 +609,59 @@ public class OpenStack_CloudController {
 	 * @return  Openstack client
 	 */
 	public OSClient getOs() {
-		OSClient os;
-		if (MiscUtil.notNullAndEmpty(this.proxyHost) && (this.proxyPort!=null))
-		{	
-			os =
-				OSFactory.builder().endpoint(this.endpoint).credentials(username,
-						this.password).tenantName(this.tenant).withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
-						.authenticate();
+		if (v3) {
+			OSClient os = getOs3(); //OS not supported for multiple regions at this time
+		} else {
+			OSClient os = getOs2(); //OS not supported for multiple regions at this time
 		}
-		else
-			os = OSFactory.builder().endpoint(this.endpoint).credentials(
-					this.username, this.password).tenantName(this.tenant)
-					.withConfig(Config.newConfig()).authenticate();
 		return os;
 	}
+
+	public OSClient getOs2() {
+
+		if (MiscUtil.notNullAndEmpty(this.proxyHost) && (this.proxyPort!=null))	{			
+			os = OSFactory.builder()
+					.endpoint(this.endpoint)
+					.credentials(username,this.password)
+					.tenantName(this.tenant).withConfig(Config.newConfig()
+					.withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+					.authenticate();
+		} else {
+			os = OSFactory.builder()
+					.endpoint(this.endpoint)
+					.credentials(this.username, this.password).tenantName(this.tenant)
+					.withConfig(Config.newConfig()).authenticate();
+		}
+
+		return os;
+	}
+
+	public OSClient getOs3() {
+
+		Identifier domainIdentifier = Identifier.byName(domain);
+		Identifier projectIdentifier = Identifier.byName(project);
+
+		if (MiscUtil.notNullAndEmpty(this.proxyHost) && (this.proxyPort!=null))
+		{	
+			os = OSFactory.builderV3()
+				.endpoint(this.endpoint)
+				.credentials(username, password, domainIdentifier)
+				.withConfig(Config.newConfig().withProxy(ProxyHost.of("http://"+this.proxyHost, this.proxyPortint)))
+				.scopeToProject(projectIdentifier, domainIdentifier)
+				.authenticate();
+
+		}
+		else
+			os = OSFactory.builderV3()
+				.endpoint(this.endpoint)
+				.credentials(username, password, domainIdentifier)
+				.withConfig(Config.newConfig())
+				.scopeToProject(projectIdentifier, domainIdentifier)
+				.authenticate();
+
+		return os;
+	}
+
 /**
  * Get list of possible "T-shirt" sizes (CPU/disk/RAM) for new VMs during provisioning
  * @return list of flavors a.k.a. t-shirt sizes

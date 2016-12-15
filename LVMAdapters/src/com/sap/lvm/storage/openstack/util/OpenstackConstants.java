@@ -3,10 +3,15 @@ package com.sap.lvm.storage.openstack.util;
 @SuppressWarnings("nls")
 public class OpenstackConstants {
 	
-	public static final String REGION = "Region";
-	public static final String REGION_DESCRIPTION = "Openstack Region";
-	public static final String TENANT= "Tenant Name";
-	public static final String TENANT_DESCRIPTION= "Tenant Name for OpenStack";
+	public static final String OS_REGION = "Region";
+	public static final String OS_REGION_DESCRIPTION = "Openstack Region";
+	public static final String OS_TENANT= "Tenant Name";
+	public static final String OS_TENANT_DESCRIPTION= "Openstack Tenant";
+	public static final String OS_DOMAIN = "Domain";
+	public static final String OS_DOMAIN_DESCRIPTION = "Openstack Domain";
+	public static final String OS_PROJECT = "Project";
+	public static final String OS_PROJECT_DESCRIPTION = "Openstack Project";
+
 	public static final String SECRET_KEY = "Secret_Key";
 	public static final String SECRET_KEY_DESCRIPTION = "Secret Key for Openstack";
 	public static final String ACCESS_KEY = "Access_Key";
@@ -23,7 +28,7 @@ public class OpenstackConstants {
 	public static final long POLL_OPERATION_SLEEP = 5000;
 
 	public static final String Openstack_VENDOR = "Openstack";
-	public static final String Openstack_VERSION = "1.0";
+	public static final String Openstack_VERSION = "1.2";
 	public static final String Openstack_FACTORY_ID = OpenstackConstants.Openstack_VENDOR + " " + OpenstackConstants.Openstack_VERSION;
 	public static final String Openstack_VIRTUALIZATION_ADAPTER = "Openstack";
 	public static final String Openstack_CLOUD = "Openstack Cloud";

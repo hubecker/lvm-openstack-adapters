@@ -12,8 +12,8 @@ import com.sap.lvm.CloudClientException;
 import com.sap.lvm.virtual.openstack.OpenStackConstants.OpenStackCloneSteps;
 import com.sap.lvm.virtual.openstack.OpenStackConstants.OpenStackInstanceStates;
 import com.sap.nw.lm.aci.engine.api.base.property.IProperty;
-import com.sap.nw.lm.aci.engine.api.base.property.ISimpleProperty;
 import com.sap.nw.lm.aci.engine.api.base.property.IPropertyType.ValueType;
+import com.sap.nw.lm.aci.engine.api.base.property.ISimpleProperty;
 import com.sap.nw.lm.aci.engine.base.api.i18n.TranslatableString;
 import com.sap.tc.vcm.infrastructure.api.adapter.InfrastructAdapterException;
 import com.sap.tc.vcm.infrastructure.api.adapter.config.ConfigPropMetaData;
@@ -22,16 +22,17 @@ import com.sap.tc.vcm.infrastructure.api.adapter.request.IJavaEeLog;
 import com.sap.tc.vcm.virtualization.adapter.api.base.IVirtOpContext;
 import com.sap.tc.vcm.virtualization.adapter.api.base.IVirtOpResponsePayload;
 import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpResponse;
-import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpSyncResponse;
-import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOperationId;
 import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpResponse.VirtLogMessage;
 import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpResponse.VirtOperationStatus;
+import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOpSyncResponse;
+import com.sap.tc.vcm.virtualization.adapter.api.base.VirtOperationId;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.AdditionalOperationMetaDataRequest;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.AdditionalOperationMetaDataResponse;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.IVirtNetworkOperationService;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.IVirtOperationService;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.NextDialogStepRequest;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.NextDialogStepResponse;
+import com.sap.tc.vcm.virtualization.adapter.api.operation.NextDialogStepResponse.UserInput;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.OperationCharacteristicsRequest;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.OperationCharacteristicsResponse;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.RetrieveAvailableTargetEntitiesRequest;
@@ -42,7 +43,6 @@ import com.sap.tc.vcm.virtualization.adapter.api.operation.ValidateRequest;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.ValidateResponse;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.VirtDefaultOperation;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.VirtOperation;
-import com.sap.tc.vcm.virtualization.adapter.api.operation.NextDialogStepResponse.UserInput;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.async.ExecuteOperationRequest;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.async.ExecuteOperationResponse;
 import com.sap.tc.vcm.virtualization.adapter.api.operation.input.DialogContext;
@@ -214,8 +214,7 @@ public class OpenStackVirtOperationService implements IVirtOperationService, IVi
 					List<String> networkIDList = new ArrayList<String>();
 					networkIDList.add(networkID);
 					if (propertiesMap.containsKey(OpenStackConstants.ADDITIONAL_NETWORK_IDS)) {
-						if (propertiesMap.get(OpenStackConstants.ADDITIONAL_NETWORK_IDS).getSimpleProperty()!=null)
-						{		String additionalNetworksString = propertiesMap.get(OpenStackConstants.ADDITIONAL_NETWORK_IDS).getSimpleProperty().getStringValue();
+						String additionalNetworksString = propertiesMap.get(OpenStackConstants.ADDITIONAL_NETWORK_IDS).getSimpleProperty().getStringValue();
 						String[] addNetworksArray = additionalNetworksString.split(",");
 						for (String addNetwork : addNetworksArray) {
 							addNetwork = addNetwork.trim();
@@ -226,7 +225,7 @@ public class OpenStackVirtOperationService implements IVirtOperationService, IVi
 									networkIDList.add(addNetwork);
 								}
 							}
-						}
+							
 						}
 					}
 					String securityGroup = propertiesMap.get("SecurityGroup").getSimpleProperty().getStringValue();
@@ -639,8 +638,8 @@ public class OpenStackVirtOperationService implements IVirtOperationService, IVi
 				instanceState = osClient.getInstanceState(entityId);
 			}
 		} catch (CloudClientException e) {
-			instanceState = OpenStackInstanceStates.pending.name();
 			logger.log(logger.SEVERITY_INFO,"Could not get status for "+entityId, instanceState, null);
+			instanceState = OpenStackInstanceStates.pending.name();
 
 		}
 		if (instanceState.equalsIgnoreCase(OpenStackConstants.OpenStackInstanceStates.pending.name()) || instanceState.equalsIgnoreCase(OpenStackConstants.OpenStackInstanceStates.stopping.name())|| instanceState.equalsIgnoreCase(OpenStackConstants.OpenStackInstanceStates.build.name()) || instanceState.equals("QUEUED") || instanceState.equals("SAVING")) {
