@@ -40,7 +40,7 @@
 
   	<dependency>
 			<groupId>com.sap.vcm</groupId>
-			<artifactId>sap.com.tc.vcm.storage.adapter.app.InfrastructureAPI</artifactId>
+			<artifactId>sap.com.tc.vcm.base.app.InfrastructureAPI</artifactId>
 			<version>1.2</version>
   	</dependency>
     
